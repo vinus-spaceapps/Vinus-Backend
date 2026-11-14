@@ -1,38 +1,38 @@
 ---
 id: summer_solar
-name: 여름 일사량
+name: Summer solar radiation
 category: sun_wind
 order: 30
-short: 여름 한 달(7월, 남반구 1월) 동안 땅에 닿은 햇빛 에너지의 하루 평균
-unit: "MJ/m²·일"
+short: Daily average of the sunlight energy reaching the ground during one summer month (July; Southern Hemisphere January)
+unit: "MJ/m²/day"
 dataset: CERES
-source: NASA POWER 일별 ALLSKY_SFC_SW_DWN (CERES)
+source: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES)
 start_year: 2001
-resolution: 약 100km (CERES 1° 격자)
-stage: 여름 (7월, 남반구 1월)
-condition: (조건 없음) 기간 평균
+resolution: ~100 km (CERES 1° grid)
+stage: Summer (July; Southern Hemisphere January)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: mean
 robust: false
 higher_is: neutral
-keywords: [햇빛, 여름, 장마, 흐림, 광합성]
+keywords: [sunlight, solar radiation, summer, rainy season, monsoon, cloudy, photosynthesis]
 ---
 
-## 정의
-여름 한 달 동안 하루 일사량(MJ/m²)을 평균한 값입니다.
+## Definition
+The average daily solar radiation (MJ/m²) over one summer month.
 
-## 왜 중요한가
-알이 크는 여름의 햇빛은 광합성 양을 정합니다. 장마로 흐린 여름이 잦은 산지에서 수확량·품질 변동을 설명하는 데 씁니다.
+## Why it matters
+Summer sunlight, while the berries are growing, sets how much photosynthesis the vine can do. Used to explain swings in yield and quality in regions where summers are often clouded over by the rainy season (monsoon).
 
-## 해석 가이드
-- 기울기가 음수면 여름이 흐려지는 쪽입니다.
+## How to read
+- A negative slope (downward trend) means summers are getting cloudier.
 
-## 주의점
-- CERES 1° 격자 값입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Values come from the CERES 1° grid.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

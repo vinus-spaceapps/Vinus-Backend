@@ -1,16 +1,16 @@
 ---
 id: last_spring_frost
-name: 마지막 봄 서리 날
+name: Last spring frost
 category: temp_frost
 order: 70
-short: 그해 봄 마지막으로 서리(최저기온 0°C 이하)가 내린 날짜 (1월 1일부터 센 날, 남반구는 7월 1일부터)
-unit: 연중일
+short: Date of the last frost of spring (minimum temperature 0°C or below), counted as days from January 1 (Southern Hemisphere from July 1)
+unit: day of year
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MIN (MERRA-2 2m 최저기온)
+source: NASA POWER daily T2M_MIN (MERRA-2 2 m minimum temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 1~6월 (남반구 7~12월)
-condition: 일 최저기온 ≤ 기준값 인 마지막 날
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Jan–Jun (Southern Hemisphere Jul–Dec)
+condition: last day with daily minimum temperature ≤ threshold
 threshold: 0
 threshold_unit: °C
 threshold_options: [0, -2]
@@ -18,22 +18,22 @@ aggregation: mean
 robust: false
 higher_is: worse
 station_var: tmin
-keywords: [늦서리, 마지막 서리, 봄 서리, 서리 날짜, 발아, 싹, 언제까지]
+keywords: [late frost, last frost, spring frost, frost date, budburst, shoots, frost risk, end of frost]
 ---
 
-## 정의
-1~6월(남반구 7~12월) 중 하루 최저기온이 기준값 이하였던 마지막 날을, 1월 1일을 1로 세어 나타낸 값입니다(남반구는 7월 1일을 1로 셈). 예: 100 = 4월 10일 무렵.
+## Definition
+The last day between January and June (Southern Hemisphere: July–December) when the daily minimum temperature was at or below the threshold, given as a day of year with January 1 = 1 (Southern Hemisphere: July 1 = 1). Example: 100 = around April 10.
 
-## 왜 중요한가
-마지막 서리가 싹트는 날짜보다 늦으면 새순이 얼 위험이 있습니다. 싹트는 날짜(그린업)와 함께 보면 "서리는 빨리 끝나는데 싹은 더 빨리 트는지"를 확인할 수 있어, 서리 대비 투자에 씁니다.
+## Why it matters
+If the last frost comes after budburst, young shoots risk freezing. Read together with the budburst date (green-up), it shows whether "frost is ending earlier, but buds are breaking even earlier", which informs frost-protection investment.
 
-## 해석 가이드
-- 기울기가 음수면 마지막 서리가 앞당겨지는 쪽입니다. 싹트는 날짜가 더 빨리 앞당겨지면 서리 위험은 오히려 커집니다.
+## How to read
+- A negative slope means the last frost is coming earlier. If budburst moves earlier even faster, frost risk actually goes up.
 
-## 주의점
-- 서리가 없는 해는 값이 비어 있습니다. 서리가 드문 산지(바로사)는 분석할 연도가 부족할 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Years with no frost have no value. Regions where frost is rare (Barossa) may not have enough years to analyze.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

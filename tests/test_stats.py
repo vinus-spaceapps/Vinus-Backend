@@ -77,7 +77,7 @@ def test_case1_significant_increase():
     r = analyze_series(YEARS, y)
     assert r["verdict"]["status"] == "significant"
     assert r["verdict"]["direction"] == "increase"
-    assert r["verdict"]["label"] == "증가, 유의함"
+    assert r["verdict"]["label"] == "Increasing, significant"
     assert r["detectable"] is None
     assert r["ci_per_decade"][0] > 0
 
@@ -86,7 +86,7 @@ def test_case2_significant_decrease():
     rng = np.random.RandomState(3)
     y = 10 - 0.3 * np.arange(23) + rng.normal(0, 1, 23)
     r = analyze_series(YEARS, y)
-    assert r["verdict"]["label"] == "감소, 유의함"
+    assert r["verdict"]["label"] == "Decreasing, significant"
     assert r["ci_per_decade"][1] < 0
 
 

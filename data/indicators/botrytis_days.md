@@ -1,38 +1,38 @@
 ---
 id: botrytis_days
-name: 잿빛곰팡이 위험일
+name: Gray mold risk days
 category: disease
 order: 30
-short: 수확기(8~9월) 동안 습도 85% 이상, 기온 15~25°C로 잿빛곰팡이가 번지기 좋은 날 수
-unit: "일"
+short: Number of days during harvest (Aug–Sep) with humidity of 85% or more and temperatures of 15–25°C, when gray mold (botrytis) spreads easily
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M·RH2M
+source: NASA POWER daily T2M, RH2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 수확기 (8~9월, 남반구 2~3월)
-condition: 상대습도 ≥ 85% 그리고 15°C ≤ 평균기온 ≤ 25°C
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Harvest period (Aug–Sep; Southern Hemisphere Feb–Mar)
+condition: Relative humidity ≥ 85% and 15°C ≤ mean temperature ≤ 25°C
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [잿빛곰팡이, 보트리티스, 부패, 송이 썩음, 수확기 병]
+keywords: [gray mold, grey mold, botrytis, bunch rot, rot, harvest disease, humidity, fungicide]
 ---
 
-## 정의
-수확기 동안 하루 평균 상대습도가 85% 이상이고 평균기온이 15~25°C였던 날의 수입니다.
+## Definition
+The number of days during the harvest period when the daily mean relative humidity was 85% or higher and the mean temperature was 15–25°C.
 
-## 왜 중요한가
-잿빛곰팡이(보트리티스)는 익은 송이를 통째로 썩게 해 수확 직전 손실을 크게 만듭니다. 수확 시기 앞당김, 수확 전 방제, 송이 솎기 판단에 씁니다.
+## Why it matters
+Gray mold (botrytis) can rot ripe bunches whole, causing heavy losses right before harvest. Used to decide whether to harvest earlier, spray before harvest, or thin bunches.
 
-## 해석 가이드
-- 기울기가 양수면 수확기 부패 위험이 커지는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means the risk of rot at harvest is rising.
 
-## 주의점
-- 하루 평균값으로 계산한 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- An approximation based on daily mean values.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

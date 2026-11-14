@@ -43,7 +43,7 @@ def ols_trend(years: Sequence[float], values: Sequence[float], alpha: float = AL
     y = np.asarray(values, dtype=float)
     n = x.size
     if n < 3:
-        raise ValueError("OLS 추세에는 3개 이상의 연도가 필요합니다")
+        raise ValueError("OLS trend needs at least 3 years")
 
     xm, ym = x.mean(), y.mean()
     sxx = float(np.sum((x - xm) ** 2))
@@ -109,7 +109,7 @@ def mann_kendall(values: Sequence[float]) -> dict:
     y = np.asarray(values, dtype=float)
     n = y.size
     if n < 4:
-        raise ValueError("Mann-Kendall 검정에는 4개 이상의 연도가 필요합니다")
+        raise ValueError("Mann-Kendall test needs at least 4 years")
     s, var_s = _mk_s_and_var(y)
     if var_s <= 0:
         z = 0.0
@@ -206,12 +206,12 @@ def make_verdict(p_t: float, p_mk: float, slope: float, alpha: float = ALPHA) ->
     sig_t = p_t < alpha
     sig_mk = p_mk < alpha
     direction = "increase" if slope > 0 else "decrease" if slope < 0 else "flat"
-    word = {"increase": "증가", "decrease": "감소", "flat": "변화 없음"}[direction]
+    word = {"increase": "Increasing", "decrease": "Decreasing", "flat": "No change"}[direction]
     if sig_t and sig_mk:
-        return Verdict("significant", direction, f"{word}, 유의함")
+        return Verdict("significant", direction, f"{word}, significant")
     if sig_t or sig_mk:
-        return Verdict("mixed", direction, f"{word} 경향, 검정 결과 엇갈림")
-    return Verdict("not_significant", direction, "유의하지 않음")
+        return Verdict("mixed", direction, f"{word} trend, tests disagree")
+    return Verdict("not_significant", direction, "Not significant")
 
 
 def analyze_series(years: Sequence[int], values: Sequence[float], robust: bool = False) -> dict:
@@ -220,7 +220,7 @@ def analyze_series(years: Sequence[int], values: Sequence[float], robust: bool =
     vals = np.asarray(values, dtype=float)
     n = int(yrs.size)
     if n < 5:
-        raise ValueError("추세 분석에는 5개 이상의 연도가 필요합니다")
+        raise ValueError("Trend analysis needs at least 5 years")
 
     ols = ols_trend(yrs, vals)
     mk = mann_kendall(vals)

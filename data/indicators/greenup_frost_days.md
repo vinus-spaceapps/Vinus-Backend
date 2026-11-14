@@ -1,16 +1,16 @@
 ---
 id: greenup_frost_days
-name: 그린업 뒤 서리일수
+name: Frost days after green-up
 category: temp_frost
 order: 20
-short: 위성이 본 그해 싹트는 날짜(그린업)부터 30일 동안 최저기온이 기준값 이하였던 날 수
-unit: 일
+short: Number of days with a minimum temperature at or below the threshold in the 30 days after that year's satellite-observed budburst date (green-up)
+unit: days
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MIN (MERRA-2) + MODIS MCD12Q2 그린업 날짜
+source: NASA POWER daily T2M_MIN (MERRA-2) + MODIS MCD12Q2 green-up date
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 그해 그린업 날짜부터 30일
-condition: 일 최저기온 ≤ 기준값
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: 30 days from that year's green-up date
+condition: daily minimum temperature ≤ threshold
 threshold: 0
 threshold_unit: °C
 threshold_options: [0, -2]
@@ -18,25 +18,25 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmin
-keywords: [그린업, 발아 후 서리, 싹튼 뒤, 늦서리, 새순, 냉해, 서리 피해]
+keywords: [green-up, frost after budburst, post-budburst frost, late frost, spring frost, shoots, freeze damage, frost damage]
 ---
 
-## 정의
-MODIS 위성이 잡은 그해 싹트는 날짜(그린업)부터 30일 동안 하루 최저기온이 기준값(기본 0°C) 이하였던 날의 수입니다. 달력으로 고정한 '싹튼 뒤 서리일수'와 달리, 해마다 달라지는 싹트는 날짜를 따라 기간이 움직입니다.
+## Definition
+The number of days with a daily minimum temperature at or below the threshold (default 0°C) during the 30 days starting from that year's budburst date (green-up, the date the MODIS satellite sees vegetation turning green). Unlike the calendar-fixed "Frost days after budburst", the window moves with the budburst date, which changes from year to year.
 
-## 왜 중요한가
-온난화로 싹이 빨리 트면 달력상 서리는 줄어도 '싹이 튼 뒤'의 서리는 그대로이거나 늘 수 있습니다. 새순이 실제로 노출되는 서리를 보므로 서리 대비 시설·보험 판단에 더 직접적입니다.
+## Why it matters
+When warming makes buds break earlier, frost on the calendar may decline while frost "after budburst" stays the same or even increases. Because it looks at the frost new shoots are actually exposed to, it is more directly useful for frost-protection and insurance decisions.
 
-## 해석 가이드
-- 기울기가 양수면 새순이 서리를 맞는 날이 늘어나는 쪽입니다.
-- 달력 고정 '싹튼 뒤 서리일수'와 방향이 다르면, 싹트는 날짜가 바뀐 효과입니다.
+## How to read
+- A positive slope means new shoots are being hit by frost on more days.
+- If it moves in a different direction from the calendar-fixed "Frost days after budburst", the difference is the effect of the shifting budburst date.
 
-## 주의점
-- 그린업은 포도밭만이 아니라 산지 영역 식생 전체의 값입니다.
-- 남반구(바로사)는 그린업이 겨울 목초를 잡아 계산하지 않습니다.
-- MODIS 그린업이 없는 해(2026년 등)는 빠집니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Green-up reflects all vegetation in the region area, not just vineyards.
+- In the Southern Hemisphere (Barossa), green-up picks up winter pasture, so it is not calculated.
+- Years without a MODIS green-up date (such as 2026) are left out.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

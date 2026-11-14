@@ -1,16 +1,16 @@
 ---
 id: gs_tmin_mean
-name: 생육기 평균 최저기온
+name: Growing-season mean minimum temperature
 category: growth
 order: 150
-short: 생육기 동안 하루 최저기온의 평균. 밤 기온의 수준
+short: Average of the daily minimum temperature over the growing season — the level of night temperatures
 unit: "°C"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MIN
+source: NASA POWER daily T2M_MIN
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: mean
 robust: false
 higher_is: worse
 station_var: tmin
-keywords: [밤 기온, 최저기온, 산도, 향, 온난화]
+keywords: [night temperature, minimum temperature, warm nights, acidity, aroma, warming]
 ---
 
-## 정의
-생육기 동안 하루 최저기온을 평균한 값입니다.
+## Definition
+The average of the daily minimum temperature over the growing season.
 
-## 왜 중요한가
-온난화는 낮보다 밤을 더 빨리 데우는 경우가 많습니다. 밤이 따뜻해지면 산도와 향이 줄어 품질에 영향이 크므로 생육기 평균 최고기온과 함께 씁니다.
+## Why it matters
+Warming often heats the nights faster than the days. Warmer nights reduce acidity and aroma, which has a big effect on quality, so this is used together with the growing-season mean maximum temperature.
 
-## 해석 가이드
-- 기울기가 양수면 밤이 따뜻해지는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means nights are getting warmer.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Because it is a 50 km grid average, differences in elevation and hillside position are not captured.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

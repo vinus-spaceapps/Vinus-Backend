@@ -1,38 +1,38 @@
 ---
 id: summer_rain
-name: 여름 강수량
+name: Summer rainfall
 category: rain_water
 order: 100
-short: 여름 한 달(7월, 남반구 1월) 동안 내린 비의 총량. 알이 크는 시기의 물
+short: Total rain in one summer month (July; Southern Hemisphere January). Water while the berries are growing
 unit: "mm"
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR
+source: NASA POWER daily PRECTOTCORR
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 여름 (7월, 남반구 1월)
-condition: (조건 없음) 기간 합계
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Summer (Jul; Southern Hemisphere Jan)
+condition: (no condition) total over the period
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: sum
 robust: false
 higher_is: neutral
-keywords: [여름비, 장마, 7월, 알 비대, 배수]
+keywords: [summer rain, rainy season, July, berry growth, berry size, drainage, irrigation]
 ---
 
-## 정의
-포도알이 커지는 여름 한 달(7월, 남반구 1월) 동안 내린 비를 모두 더한 양입니다.
+## Definition
+The total rain over the summer month when the berries swell (July; Southern Hemisphere January).
 
-## 왜 중요한가
-이 시기 비가 너무 많으면 알이 커져 맛이 묽어지고 병이 번지며, 너무 적으면 알이 작아집니다. 장마가 7월에 걸리는 영동에서 특히 중요해 관수·배수 판단에 씁니다.
+## Why it matters
+Too much rain at this stage makes berries swell so their flavor is diluted and disease spreads; too little leaves berries small. It is especially important in Yeongdong, where the monsoon rains extend into July, and is used for irrigation and drainage decisions.
 
-## 해석 가이드
-- 해마다 차이가 큽니다. 여름 물수지와 함께 보세요.
+## How to read
+- Year-to-year variation is large. Look at it together with summer water balance.
 
-## 주의점
-- MERRA-2 강수는 모델에 관측을 보정한 값이라 국지성 비를 작게 잡을 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- MERRA-2 precipitation is model output corrected with observations, so it can underestimate local rain.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

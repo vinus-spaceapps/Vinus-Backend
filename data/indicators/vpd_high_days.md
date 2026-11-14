@@ -1,38 +1,38 @@
 ---
 id: vpd_high_days
-name: 고VPD 일수
+name: High-VPD days
 category: drought
 order: 60
-short: 생육기 동안 공기가 매우 메말라(VPD 1.5 kPa 이상) 잎이 물을 빼앗기는 날 수
-unit: "일"
+short: Number of growing-season days when the air is very dry (VPD 1.5 kPa or more) and leaves lose water fast
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M·RH2M
+source: NASA POWER daily T2M·RH2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 증기압 부족(VPD) ≥ 1.5 kPa
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Vapor pressure deficit (VPD) ≥ 1.5 kPa
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [VPD, 대기 건조, 물 스트레스, 증산, 기공]
+keywords: [VPD, high VPD, dry air, water stress, transpiration, stomata, misting]
 ---
 
-## 정의
-생육기 동안 하루 평균 증기압 부족(VPD)이 1.5 kPa 이상이었던 날의 수입니다.
+## Definition
+The number of growing-season days when the daily mean vapor pressure deficit (VPD) was 1.5 kPa or more.
 
-## 왜 중요한가
-VPD가 높은 날에는 흙에 물이 있어도 포도나무가 기공을 닫아 광합성이 멈춥니다. 미세살수·차광과 관수 시점 판단에 씁니다.
+## Why it matters
+On high-VPD days, the vine closes its stomata (leaf pores) and photosynthesis stops, even if there is water in the soil. It is used for decisions on misting, shading and irrigation timing.
 
-## 해석 가이드
-- 기울기가 양수면 대기 건조 스트레스가 잦아지는 쪽입니다.
+## How to read
+- A positive slope means dry-air stress is becoming more frequent.
 
-## 주의점
-- 하루 평균값으로 계산한 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- An approximation based on daily mean values.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

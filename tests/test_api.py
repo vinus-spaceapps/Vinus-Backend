@@ -52,16 +52,16 @@ def test_analyze_real_data():
     assert res["is_mock"] is False
     assert body["is_mock"] is False
     assert len(res["series"]) == 26
-    assert res["stats"]["verdict"]["label"] == "증가, 유의함"
+    assert res["stats"]["verdict"]["label"] == "Increasing, significant"
     assert len(res["regions"]) == 7
     assert all("q_mk" in c for c in res["regions"])
-    assert "충북 영동 · 생육기 적산온도 · 2001~2026" in res["verdict_text"]
+    assert res["verdict_text"].startswith("Yeongdong · ") and "2001~2026" in res["verdict_text"]
 
 
 def test_analyze_mock_indicator_is_flagged():
     res = client.post("/api/analyze", json=SMOKE).json()["results"][0]
     assert res["is_mock"] is True
-    assert "예시" in res["source_note"]
+    assert "Sample data" in res["source_note"]
 
 
 def test_analyze_reports_missing_years():
@@ -88,7 +88,7 @@ def test_threshold_variant_uses_real_file():
 def test_unknown_threshold_is_refused_not_invented():
     r = client.post("/api/analyze", json={**QUERY, "variables": ["heat_days"], "thresholds": {"heat_days": 33}})
     assert r.status_code == 400
-    assert "실제 집계가 아직 없습니다" in r.json()["detail"]
+    assert "no real data yet" in r.json()["detail"]
 
 
 def test_daily_derived_indicators_are_real():
@@ -113,14 +113,14 @@ def test_generated_families_analyze():
 
 
 def test_variable_ai_keeps_to_core_indicators():
-    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "4월 최저기온 서리"}], "basket": []}).json()
+    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "April minimum temperature frost"}], "basket": []}).json()
     assert r["add"] and r["add"][0]["id"] == "frost_after_budburst"
 
 
 def test_no_frost_region_explains_instead_of_inventing():
     r = client.post("/api/analyze", json={**QUERY, "variables": ["last_spring_frost"], "region": "barossa", "thresholds": {"last_spring_frost": -2}})
     assert r.status_code == 400
-    assert "연도가 0개" in r.json()["detail"]
+    assert "only 0 years" in r.json()["detail"]
 
 
 def test_validation_attached():
@@ -130,7 +130,7 @@ def test_validation_attached():
 
 def test_user_overlay_correlation():
     pts = [{"year": y, "value": float(y % 7)} for y in range(2005, 2025)]
-    r = client.post("/api/analyze", json={**QUERY, "user_series": pts, "user_label": "수확량"}).json()
+    r = client.post("/api/analyze", json={**QUERY, "user_series": pts, "user_label": "Yield"}).json()
     ov = r["results"][0]["overlay"]
     assert ov["common_years"] == 20
     assert ov["correlation"] is not None
@@ -143,27 +143,27 @@ def test_bad_requests():
 
 
 def test_variable_ai_fallback_adds_frost():
-    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "봄마다 서리 때문에 걱정이야"}], "basket": []}).json()
+    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "I worry about spring frost every year"}], "basket": []}).json()
     assert r["source"] == "fallback"
     assert "frost_after_budburst" in [a["id"] for a in r["add"]]
     assert len(r["add"]) <= 3
 
 
 def test_variable_ai_fallback_asks_when_vague():
-    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "요즘 좀 걱정이네"}], "basket": []}).json()
+    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "I am a bit worried lately"}], "basket": []}).json()
     assert r["add"] == []
     assert "?" in r["reply"]
 
 
 def test_variable_ai_fallback_explains():
-    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "적산온도가 뭐야?"}], "basket": []}).json()
+    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "What is growing degree days?"}], "basket": []}).json()
     assert r["add"] == []
-    assert "적산온도" in r["reply"]
+    assert "degree" in r["reply"].lower()
 
 
 def test_variable_ai_respects_basket_limit():
     full = ["heat_days", "gdd_growing_season", "harvest_rain_days"]
-    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "서리 걱정"}], "basket": full}).json()
+    r = client.post("/api/ai/variables", json={"messages": [{"role": "user", "content": "frost worries"}], "basket": full}).json()
     assert r["add"] == []
 
 
@@ -179,17 +179,17 @@ def test_insight_fallback_card_has_six_parts():
     card = r["card"]
     for k in ("summary", "numbers", "confidence", "meaning", "next_steps", "sources"):
         assert card[k]
-    assert "산지 단위" in card["confidence"]
-    assert "추세가 없을 때" in card["confidence"]
-    assert "예시 데이터" not in card["confidence"]
+    assert "regional averages" in card["confidence"]
+    assert "if there were no trend" in card["confidence"]
+    assert "sample data" not in card["confidence"].lower()
     assert 1 <= len(card["next_steps"]) <= 3
 
 
 def test_insight_fallback_mentions_station_check():
     q = {**QUERY, "variables": ["frost_after_budburst"], "region": "okanagan"}
     r = client.post("/api/ai/insight", json={"query": q, "variable_id": "frost_after_budburst", "context": {"decision": "frost_invest"}}).json()
-    assert "관측소" in r["card"]["confidence"]
-    assert "변화 방향" in r["card"]["confidence"]  # 오카나간은 오차가 커서 경고
+    assert "weather station" in r["card"]["confidence"]
+    assert "direction of change" in r["card"]["confidence"]  # 오카나간은 오차가 커서 경고
 
 
 @pytest.fixture
@@ -199,7 +199,7 @@ def spiky_series(monkeypatch):
     values = [3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 12, 3, 14]
 
     def fake(meta, region_id, start, end, threshold=None):
-        return SeriesResult(years, [float(v) for v in values], False, "테스트용 합성 시계열")
+        return SeriesResult(years, [float(v) for v in values], False, "synthetic test series")
 
     monkeypatch.setattr(analysis, "get_series", fake)
 
@@ -208,11 +208,11 @@ def test_insight_fallback_mentions_disagreement_and_one_year(spiky_series):
     q = {**QUERY, "variables": ["harvest_rain_days"], "region": "yeongdong"}
     r = client.post("/api/ai/insight", json={"query": q, "variable_id": "harvest_rain_days", "context": {"decision": "harvest"}}).json()
     conf = r["card"]["confidence"]
-    assert "엇갈" in conf
-    assert "빼면 판정이" in conf
+    assert "disagree" in conf
+    assert "changes the verdict" in conf
 
 
 def test_unverified_number_guard():
     materials = {"trend": {"slope_per_decade": 4.0, "p": 0.0012}, "period": {"start": 2003, "end": 2025}}
-    assert unverified_numbers(["10년에 4.0일 늘었고 2003~2025"], materials) == []
-    assert unverified_numbers(["10년에 37.5일 늘었습니다"], materials) == ["37.5"]
+    assert unverified_numbers(["rose 4.0 days per decade over 2003–2025"], materials) == []
+    assert unverified_numbers(["rose 37.5 days per decade"], materials) == ["37.5"]

@@ -1,41 +1,41 @@
 ---
 id: harvest_aerosol_days
-name: 수확기 연기 에어로졸 일수
+name: Harvest-period smoke aerosol days
 category: smoke_air
 order: 20
-short: 착색부터 수확까지 자외선 에어로졸 지수(연기·먼지)가 기준값 이상이었던 날 수
-unit: 일
+short: Number of days from veraison to harvest when the UV aerosol index (smoke, dust) was at or above the threshold
+unit: days
 dataset: OMI
-source: OMI/Aura OMAERUVd 자외선 에어로졸 지수 (UV Aerosol Index)
+source: OMI/Aura OMAERUVd UV Aerosol Index
 start_year: 2005
-resolution: 1° 격자 (센서 화소 수십 km)
-stage: 착색~수확
+resolution: 1° grid (sensor pixels a few tens of km across)
+stage: Veraison to harvest
 stage_from: veraison
 stage_to: harvest
-condition: 자외선 에어로졸 지수 ≥ 기준값
+condition: UV aerosol index ≥ threshold
 threshold: 1.0
-threshold_unit: (지수)
+threshold_unit: (index)
 threshold_options: [0.7, 1.0, 1.5]
 aggregation: count
 robust: true
 higher_is: worse
-keywords: [에어로졸, 연기, 먼지, 미세먼지, 황사, 연무, 산불, 하늘, aerosol, smoke]
+keywords: [aerosol, smoke, dust, fine dust, yellow dust, haze, wildfire, sky, air quality]
 ---
 
-## 정의
-착색부터 수확일까지, 위성이 잰 자외선 에어로졸 지수가 기준값(기본 1.0) 이상이었던 날의 수입니다. 이 지수는 햇빛을 흡수하는 연기·먼지 입자가 많을수록 커집니다.
+## Definition
+The number of days from veraison (when the grapes start to change color) to harvest day when the satellite-measured UV aerosol index was at or above the threshold (default 1.0). The index rises as smoke and dust particles that absorb sunlight increase.
 
-## 왜 중요한가
-일산화탄소(수확기 연기 노출일수)와 함께 보면 "연기가 실제로 하늘을 덮었는가"를 교차 확인할 수 있습니다. 두 지표가 같은 방향이면 연기 노출 증가 판단에 더 힘이 실립니다.
+## Why it matters
+Read alongside carbon monoxide (harvest-period smoke exposure days), it lets you cross-check whether "smoke actually covered the sky". When both indicators move in the same direction, the case that smoke exposure is rising is stronger.
 
-## 해석 가이드
-- 산불 연기처럼 튀는 지표라 Sen 기울기와 Mann-Kendall을 기본으로 봅니다.
-- 황사 같은 먼지도 지수를 올리므로 동아시아 산지에서는 봄 먼지와 구분해서 보세요.
+## How to read
+- This indicator spikes, like wildfire smoke, so Sen's slope (a trend estimate that is less swayed by spike years) and the Mann-Kendall test (a check on whether the trend is statistically significant) are the default.
+- Dust such as yellow dust (Asian dust) also raises the index, so in East Asian regions, read it separately from spring dust.
 
-## 주의점
-- 아직 실제 집계 전이라 화면에는 예시 데이터(목업)가 표시됩니다.
-- OMI는 2007년부터 센서 일부 구역 손실(row anomaly)이 있어 관측 빈도가 줄었습니다.
-- 구름이 많은 날은 값이 비어 날수가 적게 셀 수 있습니다.
+## Caveats
+- Actual values have not been aggregated yet, so the screen shows sample data (a mockup).
+- Since 2007, OMI has lost part of its sensor's field of view (the row anomaly), so it observes less often.
+- On cloudy days values are missing, so the day count can come out too low.
 
-## 근거
+## References
 - Torres et al. (2007), Aerosols and surface UV products from OMI — https://doi.org/10.1029/2007JD008809

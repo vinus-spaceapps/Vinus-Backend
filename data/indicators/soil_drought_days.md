@@ -1,38 +1,38 @@
 ---
 id: soil_drought_days
-name: 토양 가뭄 일수
+name: Soil drought days
 category: drought
 order: 140
-short: 생육기 동안 뿌리층 흙이 그 산지의 평소(2001~2010년) 하위 20%보다 마른 날 수
-unit: "일"
+short: Number of growing-season days when root-zone soil is drier than the region's usual lowest 20% (2001–2010)
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 GWETROOT
+source: NASA POWER daily GWETROOT
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 뿌리층 토양수분 < 그 산지 2001~2010년 생육기 하위 20%
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Root-zone soil moisture < the region's 2001–2010 growing-season 20th percentile
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [토양 가뭄, 마른 땅, 가뭄 일수, 관수, 평소보다]
+keywords: [soil drought, dry soil, drought days, drier than normal, irrigation, soil moisture]
 ---
 
-## 정의
-생육기 동안 뿌리층 토양수분이, 그 산지의 2001~2010년 생육기 값 가운데 하위 20% 기준보다 낮았던 날의 수입니다.
+## Definition
+The number of growing-season days when root-zone soil moisture fell below the bottom-20% mark (20th percentile) of that region's own 2001–2010 growing-season values.
 
-## 왜 중요한가
-산지마다 흙과 기후가 달라 '얼마나 마르면 가뭄인가'가 다릅니다. 각 산지의 평소를 기준으로 '평소보다 마른 날'을 세어 산지끼리 비교할 수 있게 했습니다. 관수 투자 판단에 씁니다.
+## Why it matters
+Soils and climates differ between regions, so "how dry counts as drought" differs too. By counting "days drier than usual" against each region's own baseline, regions can be compared with one another. It is used for irrigation investment decisions.
 
-## 해석 가이드
-- 기울기가 양수면 평소보다 마른 날이 늘어나는 쪽입니다. 2001~2010년은 정의상 연평균 약 20%입니다.
+## How to read
+- A positive slope means days drier than usual are becoming more common. By definition, the years 2001–2010 average about 20% of days per year.
 
-## 주의점
-- 기준 기간(2001~2010) 자체가 평년과 다를 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- The baseline period (2001–2010) may itself differ from the long-term normal.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

@@ -1,16 +1,16 @@
 ---
 id: frost_free_days
-name: 무상기간
+name: Frost-free period
 category: growth
 order: 230
-short: 마지막 봄 서리와 첫 가을 서리 사이, 서리가 없는 날의 수
-unit: 일
+short: Number of frost-free days between the last spring frost and the first autumn frost
+unit: days
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MIN (MERRA-2 2m 최저기온)
+source: NASA POWER daily T2M_MIN (MERRA-2 2 m minimum temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 마지막 봄 서리 ~ 첫 가을 서리
-condition: 일 최저기온 ≤ 0°C 인 날 사이의 기간
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Last spring frost to first autumn frost
+condition: Period between days with a daily minimum temperature ≤ 0°C
 threshold: 0
 threshold_unit: °C
 threshold_options: [0]
@@ -18,23 +18,23 @@ aggregation: count
 robust: false
 higher_is: better
 station_var: tmin
-keywords: [무상기간, 서리 없는, 생육 기간, 가을 서리, 첫서리, 늦서리, 재배 기간]
+keywords: [frost-free period, frost-free days, no frost, growing season length, autumn frost, first frost, late frost, season length]
 ---
 
-## 정의
-그해 마지막 봄 서리(최저기온 0°C 이하) 다음 날부터 첫 가을 서리 전날까지의 날 수입니다.
+## Definition
+The number of days from the day after that year's last spring frost (minimum temperature 0°C or below) to the day before the first autumn frost.
 
-## 왜 중요한가
-서리 없는 기간이 길어야 늦게 익는 품종도 서리 전에 수확할 수 있습니다. 만생종 도입이나 수확 시기 조정을 고민할 때 씁니다.
+## Why it matters
+A long frost-free period is what lets even late-ripening varieties be harvested before frost. Used when considering planting late-ripening varieties or adjusting harvest timing.
 
-## 해석 가이드
-- 기울기가 양수면 서리 없는 기간이 길어지는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means the frost-free period is getting longer.
 
-## 주의점
-- 서리가 거의 없는 산지(나파 일부 해, 바로사)는 계산되지 않는 해가 많습니다.
-- 마지막 연도는 가을이 끝나지 않아 빠질 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- In regions with almost no frost (Napa in some years, Barossa), many years cannot be calculated.
+- The most recent year may be missing because its autumn is not over yet.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

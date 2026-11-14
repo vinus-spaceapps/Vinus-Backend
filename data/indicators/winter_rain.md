@@ -1,38 +1,38 @@
 ---
 id: winter_rain
-name: 휴면기 강수량
+name: Dormancy rainfall
 category: rain_water
 order: 180
-short: 휴면기(11~3월, 남반구 5~9월)에 내린 비의 총량. 봄에 쓸 땅속 물을 채우는 비
+short: Total rain during dormancy (Nov–Mar; Southern Hemisphere May–Sep). The rain that refills soil water for spring
 unit: mm
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR (MERRA-2 관측 보정 강수)
+source: NASA POWER daily PRECTOTCORR (MERRA-2 observation-corrected precipitation)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 휴면기 (11~3월, 남반구 5~9월)
-condition: (조건 없음) 기간 합계
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Dormancy (Nov–Mar; Southern Hemisphere May–Sep)
+condition: (no condition) total over the period
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: sum
 robust: false
 higher_is: better
-keywords: [겨울 비, 겨울 강수, 땅속 물, 저수, 가뭄, 관수, 토양 수분 보충]
+keywords: [winter rain, winter rainfall, soil water, water storage, drought, irrigation, soil moisture recharge]
 ---
 
-## 정의
-휴면기(북반구 전년 11월~3월, 남반구 5~9월)에 내린 비를 모두 더한 양입니다.
+## Definition
+The total rain that fell during dormancy (Northern Hemisphere previous November to March; Southern Hemisphere May to September).
 
-## 왜 중요한가
-여름이 건조한 산지(나파·바로사·보르도)는 겨울비로 채운 땅속 물로 한 해를 버팁니다. 겨울비가 줄면 봄부터 관수가 필요해지므로 관수 시설·물 확보 판단에 씁니다.
+## Why it matters
+Regions with dry summers (Napa, Barossa, Bordeaux) get through the year on soil water stored up from winter rain. When winter rain declines, irrigation is needed from spring onward, so this is used for decisions on irrigation infrastructure and securing water.
 
-## 해석 가이드
-- 기울기가 음수면 땅속 물이 덜 채워지는 쪽입니다. 생육기 물수지와 함께 보세요.
+## How to read
+- A negative slope means the soil is being refilled less. Look at it together with growing-season water balance.
 
-## 주의점
-- 눈으로 내린 양도 물로 환산되어 포함됩니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Snowfall is included, converted to its water equivalent.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

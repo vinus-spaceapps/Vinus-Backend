@@ -22,7 +22,7 @@ from .analysis import AnalysisError, AnalyzeRequest, run_analysis  # noqa: E402
 
 logging.basicConfig(level=logging.INFO)
 
-app = FastAPI(title="Vinus API", version="0.1.0", description="와인 기후 추세 탐정 — NASA Space Apps 2026")
+app = FastAPI(title="Vinus API", version="0.1.0", description="Wine climate trend detective — NASA Space Apps 2026")
 
 origins = [o.strip() for o in os.getenv("VINUS_CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",") if o.strip()]
 # 지표 목록이 커서(약 1MB) 압축해서 보냅니다.

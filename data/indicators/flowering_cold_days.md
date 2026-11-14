@@ -1,16 +1,16 @@
 ---
 id: flowering_cold_days
-name: 개화기 저온일수
+name: Flowering-period cold days
 category: growth
 order: 90
-short: 꽃이 피는 달(6월) 동안 평균기온이 15°C 아래로 서늘했던 날 수
-unit: "일"
+short: Number of cool days during the flowering month (June) with a mean temperature below 15°C
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M
+source: NASA POWER daily T2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 개화기 (6월, 남반구 12월)
-condition: 일 평균기온 < 15°C
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Flowering (June; Southern Hemisphere December)
+condition: Daily mean temperature < 15°C
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmean
-keywords: [개화, 저온, 꽃떨이, 착과, 서늘]
+keywords: [flowering, bloom, cold, cool weather, coulure, poor fruit set, fruit set]
 ---
 
-## 정의
-개화기 동안 하루 평균기온이 15°C 미만이었던 날의 수입니다.
+## Definition
+The number of days during flowering when the daily mean temperature was below 15°C.
 
-## 왜 중요한가
-꽃이 필 때 서늘하면 꽃가루받이가 늦어지고 열매가 덜 맺혀(꽃떨이) 송이가 성기게 됩니다. 서늘한 산지의 수확량 예측과 품종 선택에 씁니다.
+## Why it matters
+Cool weather at bloom slows pollination and fewer berries set (poor fruit set, or coulure), leaving loose, sparse bunches. Used for yield forecasting and variety choice in cool regions.
 
-## 해석 가이드
-- 기울기가 음수면 개화기 저온이 줄어드는 쪽입니다.
+## How to read
+- A negative slope (downward trend) means fewer cold days at flowering.
 
-## 주의점
-- 실제 개화 시기는 해마다 달라 한 달 고정 기간은 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Actual flowering dates vary from year to year, so a fixed one-month window is an approximation.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

@@ -1,16 +1,16 @@
 ---
 id: ice_days
-name: 겨울 결빙일수
+name: Winter ice days
 category: temp_frost
 order: 140
-short: 겨울 동안 낮에도 영하(최고기온 0°C 이하)였던 날 수
-unit: "일"
+short: Number of winter days that stayed below freezing even in the daytime (maximum temperature 0°C or below)
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MAX
+source: NASA POWER daily T2M_MAX
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 겨울 (12~2월, 남반구 6~8월)
-condition: 일 최고기온 ≤ 0°C
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Winter (Dec–Feb; Southern Hemisphere Jun–Aug)
+condition: daily maximum temperature ≤ 0°C
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmax
-keywords: [결빙, 영하, 꽁꽁, 땅 얼음, 동결, 한파]
+keywords: [ice days, freezing all day, below freezing, frozen ground, deep freeze, cold wave, hard freeze]
 ---
 
-## 정의
-겨울 중 하루 최고기온이 0°C 이하, 즉 하루 종일 얼어 있던 날의 수입니다.
+## Definition
+The number of winter days when the daily maximum temperature was 0°C or below, meaning it stayed frozen all day.
 
-## 왜 중요한가
-하루 종일 영하인 날이 이어지면 땅이 깊이 얼고 뿌리와 줄기 아래쪽이 상할 수 있습니다. 흙덮기·뿌리 보호 같은 월동 대책 판단에 씁니다.
+## Why it matters
+A run of days below freezing all day can freeze the ground deeply and damage the roots and lower trunk. Used to decide on winter protection such as hilling up (mounding soil over the base of the vine) and root protection.
 
-## 해석 가이드
-- 기울기가 음수면 하루 종일 언 날이 줄어드는 쪽입니다.
+## How to read
+- A negative slope means days that stay frozen all day are becoming fewer.
 
-## 주의점
-- 오카나간은 격자 기온이 관측소보다 약 5°C 낮아 추위 지표가 부풀 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- In the Okanagan, grid temperatures run about 5°C colder than the weather station, so cold indicators may be inflated.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

@@ -1,18 +1,18 @@
 ---
 id: heat_days
-name: 생육기 폭염일수
+name: Growing-season heatwave days
 category: heat
 order: 10
-short: 생육기(4~10월, 남반구 10~4월) 동안 최고기온이 기준값 이상이었던 날 수
-unit: 일
+short: Number of days in the growing season (Apr–Oct; Southern Hemisphere Oct–Apr) with a maximum temperature at or above the threshold
+unit: days
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MAX (MERRA-2 2m 최고기온)
+source: NASA POWER daily T2M_MAX (MERRA-2 2 m maximum temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
 stage_from: budburst
 stage_to: harvest
-condition: 일 최고기온 ≥ 기준값
+condition: daily maximum temperature ≥ threshold
 threshold: 35
 threshold_unit: °C
 threshold_options: [30, 32, 35, 38]
@@ -20,23 +20,23 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmax
-keywords: [폭염, 더위, 고온, 열, 일소, 햇볕 데임, 뜨거, 무더위, heat]
+keywords: [heatwave, heat, hot days, extreme heat, sunburn, berry sunburn, scorching, heat stress]
 ---
 
-## 정의
-생육기(북반구 4월 1일~10월 31일, 남반구 10월 1일~4월 30일) 동안 하루 최고기온이 기준값 이상이었던 날의 수입니다. 기본은 35°C(폭염)이고 30°C(고온)·32°C·38°C로 바꿔 볼 수 있습니다.
+## Definition
+The number of days in the growing season (Northern Hemisphere April 1–October 31, Southern Hemisphere October 1–April 30) with a daily maximum temperature at or above the threshold. The default is 35°C (heatwave); you can switch to 30°C (hot), 32°C or 38°C.
 
-## 왜 중요한가
-35°C를 넘는 날이 이어지면 광합성이 멈추고 포도알이 햇볕에 데이며(일소), 산도가 빠르게 떨어집니다. 내열성 품종으로의 교체, 차광망·관수 투자, 수확 시기 조정을 고민할 때 씁니다.
+## Why it matters
+When days above 35°C keep coming, photosynthesis shuts down, berries get scorched by the sun (sunburn) and acidity drops quickly. Used when weighing a switch to heat-tolerant varieties, investment in shade nets and irrigation, or a change in harvest timing.
 
-## 해석 가이드
-- 기울기가 양수면 고온 스트레스가 늘어나는 쪽입니다.
-- 서늘한 산지(모젤·부르고뉴)는 35°C 날이 거의 없어 0인 해가 많습니다. 이런 곳은 기준을 30°C로 바꿔 보세요.
+## How to read
+- A positive slope means heat stress is increasing.
+- Cool regions (Mosel, Burgundy) have almost no 35°C days, so many years are 0. For these regions, try switching the threshold to 30°C.
 
-## 주의점
-- 50km 격자 평균이라 경사면 방향·고도 차이는 반영되지 않습니다.
-- 근처 관측소와 비교한 최고기온 오차가 산지마다 다릅니다(바로사 약 +2°C, 오카나간 약 −5°C).
+## Caveats
+- As a 50 km grid average, it does not reflect differences in slope direction or elevation.
+- The maximum-temperature error compared with nearby weather stations differs by region (Barossa about +2°C, Okanagan about −5°C).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) 2_와인지표_데이터, 7_연도별지표
+## References
+- Team data workbook — sheets: wine indicator data, indicators by year
 - NASA POWER — https://power.larc.nasa.gov/

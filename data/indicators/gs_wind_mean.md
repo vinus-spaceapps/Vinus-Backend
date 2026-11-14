@@ -1,38 +1,38 @@
 ---
 id: gs_wind_mean
-name: 생육기 평균 풍속
+name: Growing-season mean wind speed
 category: sun_wind
 order: 70
-short: 생육기 동안 지상 2m 하루 평균 풍속의 평균
+short: Average of the daily mean wind speed at 2 m above ground over the growing season
 unit: "m/s"
 dataset: MERRA-2
-source: NASA POWER 일별 WS2M
+source: NASA POWER daily WS2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: mean
 robust: false
 higher_is: neutral
-keywords: [바람, 풍속, 통풍, 방풍, 건조]
+keywords: [wind, wind speed, breeze, airflow, windbreak, frost fan, drying]
 ---
 
-## 정의
-생육기 동안 지상 2m 높이의 하루 평균 풍속을 평균한 값입니다.
+## Definition
+The average of the daily mean wind speed at 2 m above ground over the growing season.
 
-## 왜 중요한가
-적당한 바람은 잎을 말려 병을 줄이지만, 바람이 잦아지면 서리 위험이, 세지면 물 손실과 가지 꺾임이 늘어납니다. 방풍림·방상팬 판단에 씁니다.
+## Why it matters
+A moderate breeze dries the leaves and reduces disease, but when the wind dies down, frost risk rises, and when it gets stronger, water loss and broken shoots increase. Used to decide on windbreaks and frost fans.
 
-## 해석 가이드
-- 기울기가 음수면 바람이 약해지는 쪽입니다(복사 서리·병해 위험 증가).
+## How to read
+- A negative slope (downward trend) means the wind is getting weaker, which raises the risk of radiation frost (frost on calm, clear nights) and disease.
 
-## 주의점
-- 50km 격자 평균이라 골짜기 바람길은 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Because it is a 50 km grid average, wind corridors along valleys are not captured.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/
