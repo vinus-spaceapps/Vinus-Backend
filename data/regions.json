@@ -1,0 +1,72 @@
+[
+  {
+    "id": "rogue_valley",
+    "name": "로그 밸리",
+    "country": "미국 오리건",
+    "lat": 42.33,
+    "lon": -122.87,
+    "hemisphere": "N",
+    "stages": {"budburst": "04-10", "flowering": "06-05", "veraison": "08-10", "harvest": "09-25"},
+    "blurb": "2020년 산불 연기로 계약 재배자 거절 사례가 나온 곳"
+  },
+  {
+    "id": "napa",
+    "name": "나파 밸리",
+    "country": "미국 캘리포니아",
+    "lat": 38.5,
+    "lon": -122.35,
+    "hemisphere": "N",
+    "stages": {"budburst": "03-20", "flowering": "05-20", "veraison": "07-25", "harvest": "09-10"},
+    "blurb": "카베르네 소비뇽 중심, 2017·2020년 대형 산불"
+  },
+  {
+    "id": "sonoma",
+    "name": "소노마 카운티",
+    "country": "미국 캘리포니아",
+    "lat": 38.45,
+    "lon": -122.8,
+    "hemisphere": "N",
+    "stages": {"budburst": "03-25", "flowering": "05-25", "veraison": "07-30", "harvest": "09-15"},
+    "blurb": "나파 서쪽, 바다 안개로 서늘한 산지"
+  },
+  {
+    "id": "burgundy",
+    "name": "부르고뉴",
+    "country": "프랑스",
+    "lat": 47.05,
+    "lon": 4.85,
+    "hemisphere": "N",
+    "stages": {"budburst": "04-10", "flowering": "06-05", "veraison": "08-05", "harvest": "09-15"},
+    "blurb": "피노 누아·샤르도네, 2016·2017·2021년 봄 서리 피해"
+  },
+  {
+    "id": "mosel",
+    "name": "모젤",
+    "country": "독일",
+    "lat": 49.95,
+    "lon": 6.95,
+    "hemisphere": "N",
+    "stages": {"budburst": "04-20", "flowering": "06-15", "veraison": "08-20", "harvest": "10-05"},
+    "blurb": "리슬링, 세계에서 가장 서늘한 고급 산지 중 하나"
+  },
+  {
+    "id": "barossa",
+    "name": "바로사 밸리",
+    "country": "남호주",
+    "lat": -34.55,
+    "lon": 138.95,
+    "hemisphere": "S",
+    "stages": {"budburst": "09-15", "flowering": "11-20", "veraison": "01-25", "harvest": "03-10"},
+    "blurb": "쉬라즈, 2024년 9월 봄 서리 큰 피해 (남반구: 시즌을 수확 연도로 표기)"
+  },
+  {
+    "id": "yeongdong",
+    "name": "충북 영동",
+    "country": "대한민국",
+    "lat": 36.17,
+    "lon": 127.78,
+    "hemisphere": "N",
+    "stages": {"budburst": "04-20", "flowering": "06-01", "veraison": "07-25", "harvest": "09-10"},
+    "blurb": "국내 최대 와인 산지, 장마·태풍과 수확기 비"
+  }
+]
