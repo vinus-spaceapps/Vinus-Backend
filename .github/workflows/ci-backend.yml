@@ -23,8 +23,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: pip
-          cache-dependency-path: '**/requirements*.txt'
+          # cache: pip 은 requirements.txt 가 없으면 에러로 job 이 실패합니다.
+          # requirements.txt 를 추가한 뒤에 다시 켜세요.
 
       # 코드가 아직 없는 초기 상태에서도 CI 가 통과하도록, 파일이 있을 때만 설치합니다.
       - name: Install
