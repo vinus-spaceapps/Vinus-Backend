@@ -1,16 +1,16 @@
 ---
 id: hottest_day
-name: 생육기 최고기온
+name: Hottest day of the growing season
 category: heat
 order: 40
-short: 생육기 중 가장 더웠던 날의 최고기온
+short: The maximum temperature on the hottest day of the growing season
 unit: "°C"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MAX
+source: NASA POWER daily T2M_MAX
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: (조건 없음) 기간 중 최고기온의 최댓값
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: (no condition) highest daily maximum temperature in the period
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: max
 robust: false
 higher_is: worse
 station_var: tmax
-keywords: [최고기온, 가장 더운 날, 폭염, 극한 더위, 일소]
+keywords: [maximum temperature, hottest day, heatwave, extreme heat, peak temperature, sunburn, leaf scorch]
 ---
 
-## 정의
-생육기 동안 하루 최고기온 가운데 가장 높은 값입니다.
+## Definition
+The highest daily maximum temperature during the growing season.
 
-## 왜 중요한가
-한 번의 극단적인 더위(40°C 안팎)로도 잎이 타고 포도알이 익어 버릴 수 있습니다. 차광망·관수 같은 폭염 대비 투자 판단에 씁니다.
+## Why it matters
+A single bout of extreme heat (around 40°C) can scorch leaves and cook the berries. Used for heatwave-protection investment decisions such as shade nets and irrigation.
 
-## 해석 가이드
-- 기울기가 양수면 가장 더운 날이 더 뜨거워지는 쪽입니다.
+## How to read
+- A positive slope means the hottest day is getting hotter.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- As a 50 km grid average, it does not reflect differences in elevation or slope.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

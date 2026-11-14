@@ -1,38 +1,38 @@
 ---
 id: wet_spell_max_gs
-name: 생육기 최장 연속 강우일
+name: Longest wet spell (growing season)
 category: rain_water
 order: 170
-short: 생육기 동안 비 오는 날이 가장 길게 이어진 일수
-unit: "일"
+short: Longest run of consecutive rainy days during the growing season
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR
+source: NASA POWER daily PRECTOTCORR
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 일 강수량 ≥ 1mm 인 날이 가장 길게 이어진 기간
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Longest run of consecutive days with daily precipitation ≥ 1 mm
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [장마, 연속 강우, 방제, 병, 잎 젖음]
+keywords: [wet spell, consecutive rain, rainy season, spraying, disease, leaf wetness]
 ---
 
-## 정의
-생육기 동안 하루 강수량 1mm 이상인 날이 가장 길게 연속된 날 수입니다.
+## Definition
+The longest run of consecutive growing-season days with 1 mm or more of daily rain.
 
-## 왜 중요한가
-비가 며칠씩 이어지면 방제를 할 틈이 없고 잎이 계속 젖어 병이 폭발적으로 번집니다. 방제 계획과 내병성 품종 판단에 씁니다.
+## Why it matters
+When rain continues for days, there is no window to spray, and leaves stay wet so disease spreads explosively. It is used for spray planning and decisions on disease-resistant varieties.
 
-## 해석 가이드
-- 기울기가 양수면 긴 장마가 늘어나는 쪽입니다.
+## How to read
+- A positive slope means long rainy spells are becoming more common.
 
-## 주의점
-- 모델 강수는 약한 비를 실제보다 자주 내리는 경향이 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Model precipitation tends to produce light rain more often than actually occurs.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

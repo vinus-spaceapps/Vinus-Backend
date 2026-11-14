@@ -1,38 +1,38 @@
 ---
 id: sunny_days_gs
-name: 생육기 맑은 날수
+name: Growing-season sunny days
 category: sun_wind
 order: 50
-short: 생육기 동안 구름이 거의 없이 맑았던 날 수
-unit: "일"
+short: Number of days in the growing season that were clear, with almost no cloud
+unit: "days"
 dataset: CERES
-source: NASA POWER 일별 ALLSKY_SFC_SW_DWN (CERES)
+source: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES)
 start_year: 2001
-resolution: 약 100km (CERES 1° 격자)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 일사량 ≥ 맑은 날 일사량(0.75 × 대기 상단 일사량)의 80%
+resolution: ~100 km (CERES 1° grid)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Solar radiation ≥ 80% of clear-sky radiation (0.75 × top-of-atmosphere radiation)
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: neutral
-keywords: [맑은 날, 일조, 햇빛, 구름, 날씨]
+keywords: [sunny days, clear days, sunshine, sunlight, clouds, weather]
 ---
 
-## 정의
-생육기 동안 실제 일사량이 그날 맑은 하늘에서 받을 수 있는 일사량(FAO-56 식)의 80% 이상이었던 날의 수입니다.
+## Definition
+The number of days in the growing season when actual solar radiation was at least 80% of what a clear sky could have delivered that day (FAO-56 formula).
 
-## 왜 중요한가
-맑은 날이 많으면 당과 색이 잘 오르지만 일소와 물 스트레스도 커집니다. 잎 관리·차광·관수 판단에 씁니다.
+## Why it matters
+Plenty of clear days helps sugar and color develop, but also raises sunburn and water stress. Used to decide on canopy management, shading and irrigation.
 
-## 해석 가이드
-- 기울기가 양수면 맑은 날이 늘어나는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means more clear days.
 
-## 주의점
-- CERES 1° 격자 값입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Values come from the CERES 1° grid.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

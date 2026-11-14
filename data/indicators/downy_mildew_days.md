@@ -1,38 +1,38 @@
 ---
 id: downy_mildew_days
-name: 노균병 감염 위험일
+name: Downy mildew infection risk days
 category: disease
 order: 10
-short: 생육 초기(4~6월) 동안 기온 10°C 이상에 비가 10mm 이상 온, 노균병이 처음 감염되기 쉬운 날 수
-unit: 일
+short: Number of days in the early growing season (Apr–Jun) with a mean temperature of 10°C or more and at least 10 mm of rain, when primary downy mildew infection is likely
+unit: days
 dataset: MERRA-2
-source: NASA POWER 일별 T2M·PRECTOTCORR (MERRA-2 평균기온·강수)
+source: NASA POWER daily T2M, PRECTOTCORR (MERRA-2 mean temperature and precipitation)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육 초기 (4~6월, 남반구 10~12월)
-condition: 일 평균기온 ≥ 10°C 그리고 일 강수량 ≥ 10mm  (3-10 규칙 단순형)
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Early growing season (Apr–Jun; Southern Hemisphere Oct–Dec)
+condition: Daily mean temperature ≥ 10°C and daily precipitation ≥ 10 mm  (simplified 3-10 rule)
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [노균병, 곰팡이, 병해, 방제, 농약, 감염, 3-10, downy mildew]
+keywords: [downy mildew, mildew, disease, spraying, fungicide, infection, 3-10 rule, rain]
 ---
 
-## 정의
-생육 초기(북반구 4~6월, 남반구 10~12월) 중 하루 평균기온이 10°C 이상이면서 비가 10mm 이상 온 날의 수입니다. 포도 노균병의 1차 감염 조건을 나타내는 '3-10 규칙'(새순 10cm, 기온 10°C, 비 10mm)을 날씨 부분만 단순하게 쓴 것입니다.
+## Definition
+The number of days in the early growing season (Apr–Jun in the Northern Hemisphere, Oct–Dec in the Southern Hemisphere) when the daily mean temperature was 10°C or higher and at least 10 mm of rain fell. It is a simplified, weather-only version of the "3-10 rule" (three 10s: shoots 10 cm long, temperature 10°C, rain 10 mm), which describes the conditions for primary downy mildew infection in grapevines.
 
-## 왜 중요한가
-노균병은 잎과 송이를 말려 한 해 농사를 망칠 수 있는 대표 병입니다. 1차 감염 위험일이 늘면 첫 방제를 앞당기고 횟수를 늘려야 하므로, 방제 계획과 내병성 품종 판단에 씁니다.
+## Why it matters
+Downy mildew is a major vine disease that shrivels leaves and bunches and can ruin a whole season. More primary-infection risk days mean the first spray has to come earlier and sprays have to be more frequent, so this is used for spray planning and for deciding on disease-resistant varieties.
 
-## 해석 가이드
-- 기울기가 양수면 노균병이 시작되기 좋은 날이 늘어나는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means more days that favor the start of downy mildew.
 
-## 주의점
-- 새순 길이 조건은 넣지 않았습니다. 실제 감염은 잎이 젖어 있는 시간에 크게 좌우됩니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- The shoot-length condition is not included. Actual infection depends heavily on how long the leaves stay wet.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

@@ -1,16 +1,16 @@
 ---
 id: winter_warm_days
-name: 겨울 이상 고온일
+name: Unusually warm winter days
 category: temp_frost
 order: 150
-short: 겨울 동안 최고기온이 기준값(기본 15°C) 이상으로 봄처럼 따뜻했던 날 수
-unit: "일"
+short: Number of winter days as warm as spring, with a maximum temperature at or above the threshold (default 15°C)
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MAX
+source: NASA POWER daily T2M_MAX
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 겨울 (12~2월, 남반구 6~8월)
-condition: 일 최고기온 ≥ 기준값
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Winter (Dec–Feb; Southern Hemisphere Jun–Aug)
+condition: daily maximum temperature ≥ threshold
 threshold: 15
 threshold_unit: °C
 threshold_options: [10, 15]
@@ -18,22 +18,22 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmax
-keywords: [겨울 이상 고온, 따뜻한 겨울날, 내한성, 겨울 해동, 동해]
+keywords: [warm winter days, winter warm spell, unusual warmth, cold hardiness, winter thaw, deacclimation, freeze damage]
 ---
 
-## 정의
-겨울 중 하루 최고기온이 기준값(기본 15°C) 이상이었던 날의 수입니다. 10°C로 바꿔 볼 수 있습니다.
+## Definition
+The number of winter days with a daily maximum temperature at or above the threshold (default 15°C). You can switch to 10°C.
 
-## 왜 중요한가
-한겨울에 며칠 따뜻하면 나무가 추위 대비(내한성)를 풀었다가 다시 오는 한파에 크게 상합니다. 따뜻한 날 뒤 한파가 잦은 산지의 월동 대책에 씁니다.
+## Why it matters
+A few warm days in midwinter can make vines drop their cold hardiness (the resistance to cold they build up for winter), so a cold wave that follows does serious damage. Used for winter protection in regions where cold waves often follow warm spells.
 
-## 해석 가이드
-- 기울기가 양수면 겨울 중 이상 고온이 잦아지는 쪽입니다. 겨울 한파일수와 함께 보세요.
+## How to read
+- A positive slope means unusually warm winter days are becoming more frequent. Read it together with winter severe cold days.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- As a 50 km grid average, it does not reflect differences in elevation or slope.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

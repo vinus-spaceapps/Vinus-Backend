@@ -53,22 +53,22 @@ def _catalog_for_prompt() -> list:
     ]
 
 
-SYSTEM_RULES = """너는 와인 생산자가 NASA 위성·모델 데이터로 기후 추세를 확인하는 웹 툴의 '변수 담기 도우미'다.
-사용자가 걱정이나 궁금한 점을 말하면, 아래 [변수 목록]에서 관련 변수를 골라 분석 바구니에 담아 준다.
+SYSTEM_RULES = """You are the "indicator picker" assistant in a web tool where wine growers check climate trends in their region with NASA satellite and model data.
+When the user describes a worry or question, pick the relevant indicators from [INDICATORS] below and add them to the analysis basket.
 
-규칙:
-1. [변수 목록]에 있는 변수만 추천한다. 목록에 없는 변수를 지어내지 않는다. 맞는 변수가 없으면 없다고 말하고 가장 가까운 것을 제안한다.
-2. 한 번에 최대 3개까지 담는다. 각 변수마다 왜 관련 있는지 이유를 한 줄로 쓴다.
-3. 걱정이 모호하면(예: "날씨가 걱정돼") 담지 말고 add 를 빈 배열로 두고, 어떤 점이 걱정인지 한 번 되묻는다.
-4. 변수 설명 질문("적산온도가 뭐야?")에는 [변수 목록]의 definition·why 내용으로만 답하고 add 는 빈 배열로 둔다.
-5. 이미 바구니에 있는 변수는 다시 담지 않는다. 바구니는 최대 3개이므로 자리가 없으면 무엇을 빼면 좋을지 제안만 한다.
-6. reply 는 생산자가 읽는 쉬운 한국어 존댓말로 2~4문장. 담았으면 "빼려면 바구니에서 ×를 누르세요"를 덧붙인다.
-7. 기울기·p값 같은 분석 결과 숫자는 아직 계산 전이므로 말하지 않는다. 미래를 예측하지 않는다.
+Rules:
+1. Recommend only indicators listed in [INDICATORS]. Never invent one. If nothing fits, say so and suggest the closest one.
+2. Add at most 3 at a time, each with a one-line reason why it is relevant.
+3. If the worry is vague (e.g. "I'm worried about the weather"), add nothing (empty add array) and ask once what exactly worries them.
+4. For questions about what an indicator means ("What is GDD?"), answer only from that indicator's definition and why in [INDICATORS], with an empty add array.
+5. Never re-add an indicator already in the basket. The basket holds at most 3; if it is full, only suggest what to remove.
+6. Write reply in plain, friendly English for a grower, 2–4 sentences, even if the user writes in another language. If you added indicators, end with "To remove one, click × in the basket."
+7. Do not state analysis numbers such as slopes or p-values (nothing has been computed yet). Do not predict the future.
 """
 
 
 def _system_prompt() -> str:
-    return SYSTEM_RULES + "\n[변수 목록]\n" + json.dumps(_catalog_for_prompt(), ensure_ascii=False, indent=1)
+    return SYSTEM_RULES + "\n[INDICATORS]\n" + json.dumps(_catalog_for_prompt(), ensure_ascii=False, indent=1)
 
 
 def _schema() -> dict:
@@ -95,9 +95,9 @@ def _schema() -> dict:
 def _basket_line(basket: List[str]) -> str:
     names = [f"{catalog.indicator(b)['name']}({b})" for b in basket if catalog.indicator(b)]
     room = max(0, BASKET_LIMIT - len(basket))
-    line = "(현재 분석 바구니: " + (", ".join(names) if names else "비어 있음") + f" / 최대 {BASKET_LIMIT}개, 남은 자리 {room}개)"
+    line = "(Current basket: " + (", ".join(names) if names else "empty") + f" / max {BASKET_LIMIT}, {room} slot(s) left)"
     if room == 0:
-        line += "\n(바구니가 가득 찼다. add 는 빈 배열로 두고, 무엇을 빼면 좋을지 제안만 한다.)"
+        line += "\n(The basket is full. Leave add empty and only suggest what to remove.)"
     return line
 
 
@@ -118,7 +118,7 @@ def _sanitize(out: dict, basket: List[str]) -> dict:
 # 규칙 기반 폴백 (AI 꺼짐·키 없음·API 오류)
 # ---------------------------------------------------------------------------
 
-QUESTION_PAT = re.compile(r"(뭐야|뭔가요|무엇|뭐예요|뭐에요|뜻|설명|알려|이란|란\?|어떤 거|어떤거)")
+QUESTION_PAT = re.compile(r"(\bwhat\b|\bmean|\bexplain|\bdefine|\bhow does|뭐야|뭔가요|무엇|뜻|설명|알려|이란)", re.I)
 
 
 def _score(meta: dict, text: str) -> int:
@@ -146,8 +146,8 @@ def fallback_reply(req: VariableChatRequest) -> dict:
     if not hits:
         cats = " / ".join(c["name"] for c in catalog.CATEGORIES)
         return {
-            "reply": "어떤 점이 가장 걱정되세요? 예를 들어 봄 서리, 여름 폭염, 수확기 비, 산불 연기, 가뭄, 지금 품종이 계속 맞을지 같은 걸 말씀해 주시면 맞는 변수를 담아 드릴게요. "
-            f"직접 고르시려면 왼쪽 카테고리({cats})를 보세요.",
+            "reply": "What worries you most? For example spring frost, summer heat, harvest rain, wildfire smoke, drought, or whether your varieties will still suit the region — tell me and I'll add matching indicators. "
+            f"To pick them yourself, browse the categories ({cats}).",
             "add": [],
         }
 
@@ -155,11 +155,11 @@ def fallback_reply(req: VariableChatRequest) -> dict:
     out = _sanitize({"add": picks}, req.basket)
     if not out["add"]:
         if len(req.basket) >= BASKET_LIMIT:
-            return {"reply": f"바구니가 가득 찼어요(최대 {BASKET_LIMIT}개). {hits[0]['name']}을(를) 보려면 바구니에서 하나를 빼 주세요.", "add": []}
-        return {"reply": f"{hits[0]['name']}은(는) 이미 바구니에 있어요. 다음 단계에서 지역을 고르시면 됩니다.", "add": []}
+            return {"reply": f"Your basket is full (max {BASKET_LIMIT}). Remove one to look at {hits[0]['name']}.", "add": []}
+        return {"reply": f"{hits[0]['name']} is already in your basket. Pick a region in the next step.", "add": []}
     names = ", ".join(a["name"] for a in out["add"])
-    lines = [f"{names}을(를) 담았어요."] + [f"· {a['name']}: {a['reason']}" for a in out["add"]]
-    lines.append("빼려면 바구니에서 ×를 누르세요.")
+    lines = [f"Added {names}."] + [f"· {a['name']}: {a['reason']}" for a in out["add"]]
+    lines.append("To remove one, click × in the basket.")
     out["reply"] = "\n".join(lines)
     return out
 
@@ -176,7 +176,7 @@ def reply(req: VariableChatRequest) -> dict:
         if wanted and not result["add"]:
             # 모델이 담겠다고 했지만 자리가 없어 실제로는 못 담은 경우 — 답변과 화면이 어긋나지 않게 밝힘
             names = ", ".join(catalog.indicator(v)["name"] for v in wanted if catalog.indicator(v))
-            result["reply"] += f"\n\n※ 바구니가 가득 차서({BASKET_LIMIT}개) {names}은(는) 담지 못했어요. 하나를 빼고 다시 말씀해 주세요."
+            result["reply"] += f"\n\nNote: the basket is full ({BASKET_LIMIT}), so {names} could not be added. Remove one and ask again."
         result["source"] = "llm"
         return result
     except llm.LLMUnavailable as e:

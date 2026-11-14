@@ -1,38 +1,38 @@
 ---
 id: et0_gs
-name: 생육기 증발산량
+name: Growing-season evapotranspiration
 category: drought
 order: 40
-short: 생육기 동안 땅과 잎에서 증발로 빠져나가는 물의 양(기준 증발산량)의 합
+short: Total water lost by evaporation from soil and leaves during the growing season (reference evapotranspiration)
 unit: "mm"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M·T2M_MAX·T2M_MIN
+source: NASA POWER daily T2M·T2M_MAX·T2M_MIN
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: Σ 기준 증발산량 ET0 (Hargreaves 식, FAO-56)
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Σ reference evapotranspiration ET0 (Hargreaves equation, FAO-56)
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: sum
 robust: false
 higher_is: worse
-keywords: [증발산, ET0, 물 수요, 관수량, 건조]
+keywords: [evapotranspiration, ET0, water demand, water use, irrigation amount, dry, evaporation]
 ---
 
-## 정의
-생육기 동안 매일 기온과 위도로 계산한 기준 증발산량(ET0, Hargreaves 식)을 더한 값입니다.
+## Definition
+The sum of daily reference evapotranspiration (ET0, Hargreaves equation) over the growing season, calculated from temperature and latitude.
 
-## 왜 중요한가
-기온이 오르면 비가 같아도 증발로 잃는 물이 늘어 관수가 더 필요해집니다. 관수 시설 규모와 물 확보량을 정하는 데 씁니다.
+## Why it matters
+As temperatures rise, more water is lost to evaporation even if rainfall stays the same, so more irrigation is needed. It is used to size irrigation systems and decide how much water to secure.
 
-## 해석 가이드
-- 기울기가 양수면 대기가 물을 더 많이 빼앗아 가는 쪽입니다.
+## How to read
+- A positive slope means the atmosphere is drawing more water out of the vineyard.
 
-## 주의점
-- 바람·습도를 넣지 않은 식이라 실제 증발산과 차이가 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- The equation does not include wind or humidity, so it differs from actual evapotranspiration.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

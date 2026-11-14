@@ -1,79 +1,149 @@
 [
   {
     "id": "burgundy",
-    "name": "부르고뉴 (본)",
-    "country": "프랑스",
+    "name": "Burgundy (Beaune)",
+    "country": "France",
     "lat": 47.02,
     "lon": 4.84,
-    "bbox": [46.9, 47.4, 4.6, 5.1],
+    "bbox": [
+      46.9,
+      47.4,
+      4.6,
+      5.1
+    ],
     "hemisphere": "N",
-    "stages": {"budburst": "04-10", "flowering": "06-05", "veraison": "08-05", "harvest": "09-15"},
-    "blurb": "피노 누아·샤르도네, 2021년 4월 봄 서리 큰 피해"
+    "stages": {
+      "budburst": "04-10",
+      "flowering": "06-05",
+      "veraison": "08-05",
+      "harvest": "09-15"
+    },
+    "blurb": "Pinot Noir and Chardonnay; heavy spring frost damage in April 2021"
   },
   {
     "id": "bordeaux",
-    "name": "보르도 (생테밀리옹)",
-    "country": "프랑스",
+    "name": "Bordeaux (Saint-Émilion)",
+    "country": "France",
     "lat": 44.89,
     "lon": -0.16,
-    "bbox": [44.5, 45.3, -1.0, 0.0],
+    "bbox": [
+      44.5,
+      45.3,
+      -1.0,
+      0.0
+    ],
     "hemisphere": "N",
-    "stages": {"budburst": "03-28", "flowering": "05-30", "veraison": "08-01", "harvest": "09-20"},
-    "blurb": "메를로·카베르네, 2024년 수확기 비와 곰팡이병"
+    "stages": {
+      "budburst": "03-28",
+      "flowering": "05-30",
+      "veraison": "08-01",
+      "harvest": "09-20"
+    },
+    "blurb": "Merlot and Cabernet; harvest-season rain and fungal disease in 2024"
   },
   {
     "id": "mosel",
-    "name": "모젤 (베른카스텔)",
-    "country": "독일",
+    "name": "Mosel (Bernkastel)",
+    "country": "Germany",
     "lat": 49.92,
     "lon": 7.07,
-    "bbox": [49.6, 50.1, 6.6, 7.3],
+    "bbox": [
+      49.6,
+      50.1,
+      6.6,
+      7.3
+    ],
     "hemisphere": "N",
-    "stages": {"budburst": "04-20", "flowering": "06-15", "veraison": "08-20", "harvest": "10-05"},
-    "blurb": "리슬링, 서리와 적산온도 상승이 함께 나타나는 서늘한 산지"
+    "stages": {
+      "budburst": "04-20",
+      "flowering": "06-15",
+      "veraison": "08-20",
+      "harvest": "10-05"
+    },
+    "blurb": "Riesling; a cool region where frost and rising heat accumulation both show up"
   },
   {
     "id": "okanagan",
-    "name": "오카나간 (올리버)",
-    "country": "캐나다",
+    "name": "Okanagan (Oliver)",
+    "country": "Canada",
     "lat": 49.18,
     "lon": -119.55,
-    "bbox": [49.0, 50.0, -119.8, -119.3],
+    "bbox": [
+      49.0,
+      50.0,
+      -119.8,
+      -119.3
+    ],
     "hemisphere": "N",
-    "stages": {"budburst": "05-01", "flowering": "06-20", "veraison": "08-15", "harvest": "10-01"},
-    "blurb": "2024년 1월 한파로 포도나무 겨울 동해, 이듬해 수확 대부분 손실"
+    "stages": {
+      "budburst": "05-01",
+      "flowering": "06-20",
+      "veraison": "08-15",
+      "harvest": "10-01"
+    },
+    "blurb": "A January 2024 cold snap caused winter injury to vines and wiped out most of the next harvest"
   },
   {
     "id": "napa",
-    "name": "나파 밸리",
-    "country": "미국 캘리포니아",
+    "name": "Napa Valley",
+    "country": "California, USA",
     "lat": 38.5,
     "lon": -122.35,
-    "bbox": [38.2, 38.7, -122.6, -122.2],
+    "bbox": [
+      38.2,
+      38.7,
+      -122.6,
+      -122.2
+    ],
     "hemisphere": "N",
-    "stages": {"budburst": "03-20", "flowering": "05-20", "veraison": "07-25", "harvest": "09-10"},
-    "blurb": "카베르네 소비뇽 중심, 2020년 산불 연기 피해"
+    "stages": {
+      "budburst": "03-20",
+      "flowering": "05-20",
+      "veraison": "07-25",
+      "harvest": "09-10"
+    },
+    "blurb": "Cabernet Sauvignon country; wildfire smoke damage in 2020"
   },
   {
     "id": "barossa",
-    "name": "바로사 (타눈다)",
-    "country": "남호주",
+    "name": "Barossa (Tanunda)",
+    "country": "South Australia",
     "lat": -34.52,
     "lon": 138.96,
-    "bbox": [-34.7, -34.4, 138.8, 139.1],
+    "bbox": [
+      -34.7,
+      -34.4,
+      138.8,
+      139.1
+    ],
     "hemisphere": "S",
-    "stages": {"budburst": "09-15", "flowering": "11-20", "veraison": "01-25", "harvest": "03-10"},
-    "blurb": "쉬라즈, 2024년 9월 봄 서리 큰 피해 (남반구: 시즌을 수확 연도로 표기)"
+    "stages": {
+      "budburst": "09-15",
+      "flowering": "11-20",
+      "veraison": "01-25",
+      "harvest": "03-10"
+    },
+    "blurb": "Shiraz; severe spring frost in September 2024 (Southern Hemisphere: seasons are labeled by harvest year)"
   },
   {
     "id": "yeongdong",
-    "name": "충북 영동",
-    "country": "대한민국",
+    "name": "Yeongdong",
+    "country": "South Korea",
     "lat": 36.17,
     "lon": 127.78,
-    "bbox": [36.0, 36.3, 127.6, 128.0],
+    "bbox": [
+      36.0,
+      36.3,
+      127.6,
+      128.0
+    ],
     "hemisphere": "N",
-    "stages": {"budburst": "04-20", "flowering": "06-01", "veraison": "07-25", "harvest": "09-10"},
-    "blurb": "국내 최대 와인 산지, 장마·태풍과 수확기 비"
+    "stages": {
+      "budburst": "04-20",
+      "flowering": "06-01",
+      "veraison": "07-25",
+      "harvest": "09-10"
+    },
+    "blurb": "Korea's largest wine region; monsoon, typhoons and harvest-season rain"
   }
 ]

@@ -43,21 +43,21 @@ def model() -> str:
 def status() -> dict:
     base = {"provider": provider(), "model": model()}
     if _truthy("VINUS_AI_DISABLED"):
-        return {**base, "enabled": False, "reason": "VINUS_AI_DISABLED 로 꺼 둠"}
+        return {**base, "enabled": False, "reason": "turned off with VINUS_AI_DISABLED"}
     if provider() == "openai":
         try:
             import openai  # noqa: F401
         except ImportError:
-            return {**base, "enabled": False, "reason": "openai 패키지 없음"}
+            return {**base, "enabled": False, "reason": "openai package not installed"}
         if not os.getenv("OPENAI_API_KEY"):
-            return {**base, "enabled": False, "reason": "OPENAI_API_KEY 없음"}
+            return {**base, "enabled": False, "reason": "OPENAI_API_KEY not set"}
         return {**base, "enabled": True, "reason": ""}
     try:
         import anthropic  # noqa: F401
     except ImportError:
-        return {**base, "enabled": False, "reason": "anthropic 패키지 없음 (Python 3.10+ 필요)"}
+        return {**base, "enabled": False, "reason": "anthropic package not installed (needs Python 3.10+)"}
     if not (os.getenv("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_AUTH_TOKEN") or _truthy("VINUS_AI_FORCE")):
-        return {**base, "enabled": False, "reason": "ANTHROPIC_API_KEY 없음"}
+        return {**base, "enabled": False, "reason": "ANTHROPIC_API_KEY not set"}
     return {**base, "enabled": True, "reason": ""}
 
 
@@ -98,30 +98,30 @@ def _openai_call(system: str, messages: list, schema: dict, effort: str, max_tok
             else:
                 raise
     except openai.AuthenticationError as e:
-        raise LLMUnavailable("OpenAI API 키가 올바르지 않습니다") from e
+        raise LLMUnavailable("invalid OpenAI API key") from e
     except openai.RateLimitError as e:
-        raise LLMUnavailable("요청 한도 초과 또는 크레딧 부족") from e
+        raise LLMUnavailable("rate limit reached or out of credits") from e
     except openai.BadRequestError as e:
         log.error("OpenAI 400: %s", e)
-        raise LLMUnavailable("잘못된 요청 (서버 로그 확인)") from e
+        raise LLMUnavailable("bad request (see server log)") from e
     except openai.APIStatusError as e:
         log.error("OpenAI API %s: %s", e.status_code, e)
-        raise LLMUnavailable(f"API 오류 {e.status_code}") from e
+        raise LLMUnavailable(f"API error {e.status_code}") from e
     except openai.APIConnectionError as e:
-        raise LLMUnavailable("네트워크 오류") from e
+        raise LLMUnavailable("network error") from e
 
     choice = resp.choices[0]
     if getattr(choice.message, "refusal", None):
-        raise LLMUnavailable("모델이 답변을 거절했습니다")
+        raise LLMUnavailable("the model declined to answer")
     if choice.finish_reason == "length":
-        raise LLMUnavailable("응답이 길이 제한에 걸렸습니다")
+        raise LLMUnavailable("the response hit the length limit")
     text: Optional[str] = choice.message.content
     if not text:
-        raise LLMUnavailable("빈 응답")
+        raise LLMUnavailable("empty response")
     try:
         return json.loads(text)
     except json.JSONDecodeError as e:
-        raise LLMUnavailable("JSON 파싱 실패") from e
+        raise LLMUnavailable("could not parse JSON") from e
 
 
 # ---------------------------------------------------------------------------
@@ -148,26 +148,26 @@ def _anthropic_call(system: str, messages: list, schema: dict, effort: str, max_
             # 안전 분류기가 거절하면 서버 측 대체 모델이 같은 요청을 이어받습니다.
             resp = client.beta.messages.create(**kwargs, betas=["server-side-fallback-2026-07-01"], fallbacks="default")
     except anthropic.AuthenticationError as e:
-        raise LLMUnavailable("API 키가 올바르지 않습니다") from e
+        raise LLMUnavailable("invalid API key") from e
     except anthropic.RateLimitError as e:
-        raise LLMUnavailable("요청 한도 초과") from e
+        raise LLMUnavailable("rate limit reached") from e
     except anthropic.BadRequestError as e:
         log.error("Claude 400: %s", e.message)
-        raise LLMUnavailable("잘못된 요청 (서버 로그 확인)") from e
+        raise LLMUnavailable("bad request (see server log)") from e
     except anthropic.APIStatusError as e:
         log.error("Claude API %s: %s", e.status_code, e.message)
-        raise LLMUnavailable(f"API 오류 {e.status_code}") from e
+        raise LLMUnavailable(f"API error {e.status_code}") from e
     except anthropic.APIConnectionError as e:
-        raise LLMUnavailable("네트워크 오류") from e
+        raise LLMUnavailable("network error") from e
 
     if resp.stop_reason == "refusal":
-        raise LLMUnavailable("모델이 답변을 거절했습니다")
+        raise LLMUnavailable("the model declined to answer")
     if resp.stop_reason == "max_tokens":
-        raise LLMUnavailable("응답이 길이 제한에 걸렸습니다")
+        raise LLMUnavailable("the response hit the length limit")
     text: Optional[str] = next((b.text for b in resp.content if b.type == "text"), None)
     if not text:
-        raise LLMUnavailable("빈 응답")
+        raise LLMUnavailable("empty response")
     try:
         return json.loads(text)
     except json.JSONDecodeError as e:
-        raise LLMUnavailable("JSON 파싱 실패") from e
+        raise LLMUnavailable("could not parse JSON") from e

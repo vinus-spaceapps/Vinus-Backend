@@ -1,40 +1,40 @@
 ---
-# 지표 md 템플릿 — 변수팀이 이 파일을 복사해서 새 지표를 만듭니다.
-# 파일 이름은 id 와 같게: data/indicators/<id>.md  (밑줄로 시작하는 파일은 읽지 않습니다)
-id: example_indicator            # 영문 소문자·밑줄. 프론트·AI·CSV 경로가 모두 이 값을 씁니다.
-name: 예시 지표                   # 카드 제목 (생산자 말로)
-category: temp_frost             # temp_frost(기온·서리) | rain_water(비·물) | smoke_air(연기·대기) | growth(생육)
-order: 99                         # 카드 표시 순서 (작을수록 앞, 카테고리별 10·20·30·40번대)
-short: 한 줄 정의                 # hover 첫 줄, 변수 담기 AI 가 읽는 정의
-unit: 일                          # 그래프 축 단위
+# Indicator md template — the variable team copies this file to create a new indicator.
+# Name the file after its id: data/indicators/<id>.md  (files starting with an underscore are not read)
+id: example_indicator            # lowercase letters and underscores. The frontend, AI and CSV paths all use this value.
+name: Example indicator           # card title (in growers' words)
+category: temp_frost             # temp_frost (temperature & frost) | rain_water (rain & water) | smoke_air (smoke & air) | growth (growth)
+order: 99                         # card display order (lower comes first; 10s·20s·30s·40s within each category)
+short: One-line definition        # first line of the hover text; the definition the variable-picker AI reads
+unit: days                        # graph axis unit
 dataset: MERRA-2                  # MERRA-2 | GPM IMERG | GLDAS | AIRS | OMI | MODIS
-source: MERRA-2 M2SDNXSLV T2MMIN (2m 일 최저기온)
-start_year: 1981                  # 해당 데이터로 온전한 첫 시즌
-resolution: 약 50km
-stage: 발아~개화                  # 집계 기간 (생육 단계)
+source: MERRA-2 M2SDNXSLV T2MMIN (2 m daily minimum temperature)
+start_year: 1981                  # first complete season available from this dataset
+resolution: ~50 km
+stage: Budburst to flowering      # aggregation period (growth stage)
 stage_from: budburst              # budburst | flowering | veraison | harvest | harvest_minus_21
 stage_to: flowering
-condition: 일 최저기온 < 기준값    # 사람이 읽는 조건
-threshold: 0                      # 기준값 (조건이 없으면 비워 둠)
+condition: Daily minimum temperature < threshold    # human-readable condition
+threshold: 0                      # threshold value (leave empty if there is no condition)
 threshold_unit: °C
-threshold_options: [0, -1, -2]    # 분석 화면·인사이트 AI 가 바꿔 볼 수 있는 기준값
-aggregation: count                # count(날수) | sum(합계) | mean(평균)
-robust: false                     # true 면 헤드라인 기울기를 Sen, 튀는 지표(연기 등)에 사용
-higher_is: worse                  # worse | better | neutral  (값이 커지면 생산자에게 나쁜가)
-keywords: [예시, 키워드]          # 변수 담기 AI 폴백 검색어
+threshold_options: [0, -1, -2]    # thresholds the analysis screen and the insight AI can switch between
+aggregation: count                # count (number of days) | sum (total) | mean (average)
+robust: false                     # if true, the headline slope uses Sen's slope; use for spiky indicators (smoke, etc.)
+higher_is: worse                  # worse | better | neutral  (is a higher value bad for growers?)
+keywords: [example, keyword]      # fallback search words for the variable-picker AI
 ---
 
-## 정의
-지표를 생산자 말로 2~3문장.
+## Definition
+Describe the indicator in growers' words, in 2–3 sentences.
 
-## 왜 중요한가
-어떤 결정(품종 교체, 서리 대비 투자, 보험·계약, 수확 계획)에 쓰이는지.
+## Why it matters
+Which decisions it informs (changing varieties, investing in frost protection, insurance and contracts, harvest planning).
 
-## 해석 가이드
-증가/감소가 무엇을 뜻하는지, 기울기를 어떻게 읽는지.
+## How to read
+What an increase or decrease means, and how to read the slope.
 
-## 주의점
-해상도, 결측, 자료 변화점 등.
+## Caveats
+Resolution, missing data, breaks in the data record, etc.
 
-## 근거
-- 출처 제목 — URL
+## References
+- Source title — URL

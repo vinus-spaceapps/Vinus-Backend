@@ -26,40 +26,41 @@ BASE_YEARS = range(2001, 2011)
 # ---------------------------------------------------------------------------
 # key: (이름, 단위, 카테고리, 쓰는 통계, 생산자 의미, 주의점, 관측소 비교)
 VARS = {
-    "t2m": ("평균기온", "°C", "temp_frost", ("mean", "min", "max"), "포도의 생장·숙성 속도를 정하는 기본 기온입니다.", "50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.", "tmean"),
-    "tmin": ("최저기온", "°C", "temp_frost", ("mean", "min", "max"), "밤 기온입니다. 서리·냉해와 산도·색 유지에 영향을 줍니다.", "골짜기 바닥의 냉기는 50km 격자에서 잘 잡히지 않습니다.", "tmin"),
-    "tmax": ("최고기온", "°C", "heat", ("mean", "min", "max"), "낮 기온입니다. 광합성, 일소(햇볕 데임), 산도 손실에 영향을 줍니다.", "50km 격자 평균이라 경사면 방향 차이는 반영되지 않습니다.", "tmax"),
-    "dtr": ("일교차", "°C", "growth", ("mean", "min", "max"), "낮과 밤의 기온 차입니다. 클수록 색·향·산도가 잘 지켜집니다.", "격자 평균이라 골짜기·산비탈의 실제 일교차보다 작게 나옵니다.", "tmean"),
-    "prec": ("강수량", "mm", "rain_water", ("sum", "max", "wet"), "물 공급원이자 병해·열과(포도알 터짐) 위험의 원인입니다.", "MERRA-2 강수는 모델에 관측을 보정한 값이라 국지성 비를 작게 잡을 수 있습니다.", None),
-    "rh": ("상대습도", "%", "disease", ("mean", "min", "max"), "곰팡이병 위험과 잎의 물 손실(증산)에 영향을 줍니다.", "하루 평균값이라 밤 이슬이나 한낮 건조는 반영되지 않습니다.", None),
-    "qv": ("비습", "g/kg", "disease", ("mean", "min", "max"), "공기 1kg에 든 수증기 양입니다. 덥고 눅눅한 정도를 보여 줍니다.", "하루 평균값입니다.", None),
-    "vpd": ("증기압 부족(VPD)", "kPa", "drought", ("mean", "min", "max"), "공기가 잎에서 물을 빼앗는 힘입니다. 클수록 물 스트레스가 큽니다.", "일평균 기온·습도로 계산해 한낮 값보다 작게 나옵니다.", None),
-    "et0": ("기준 증발산량", "mm", "drought", ("sum", "max"), "땅과 잎에서 증발로 잃는 물의 양입니다. 관수 수요를 보여 줍니다.", "기온과 위도만 쓰는 Hargreaves 식이라 바람·습도 효과는 빠져 있습니다.", None),
-    "gwtop": ("겉흙 수분", "0~1", "drought", ("mean", "min", "max"), "겉흙이 얼마나 젖어 있는지(0=마름, 1=흠뻑)입니다. 짧은 가뭄을 먼저 보여 줍니다.", "모델 값이며 관수한 밭의 실제 값과 다릅니다.", None),
-    "gwroot": ("뿌리층 수분", "0~1", "drought", ("mean", "min", "max"), "뿌리가 쓰는 깊은 흙의 젖음 정도입니다. 가뭄 스트레스를 보여 줍니다.", "모델 값이며 관수한 밭의 실제 값과 다릅니다.", None),
-    "solar": ("일사량", "MJ/m²·일", "sun_wind", ("mean", "min", "max"), "광합성 에너지이자 당·색을 만드는 햇빛입니다. 너무 강하면 일소가 생깁니다.", "CERES 위성 1° 격자 값이며 최근 며칠은 아직 비어 있습니다.", None),
-    "wind": ("풍속", "m/s", "sun_wind", ("mean", "min", "max"), "통풍으로 병을 줄이지만, 세면 가지가 꺾이고 물을 잃습니다. 약하면 복사 서리가 잘 앉습니다.", "지상 2m 하루 평균 풍속이라 순간 돌풍은 반영되지 않습니다.", None),
+    "t2m": ("mean temperature", "°C", "temp_frost", ("mean", "min", "max"), "The basic temperature that sets how fast vines grow and ripen.", "A ~50 km grid average, so elevation and slope differences are not captured.", "tmean"),
+    "tmin": ("minimum temperature", "°C", "temp_frost", ("mean", "min", "max"), "Night-time temperature. It drives frost and cold damage and how well acidity and color are kept.", "Cold-air pooling on valley floors is poorly captured by a ~50 km grid.", "tmin"),
+    "tmax": ("maximum temperature", "°C", "heat", ("mean", "min", "max"), "Daytime temperature. It affects photosynthesis, sunburn and acid loss.", "A ~50 km grid average, so slope aspect differences are not captured.", "tmax"),
+    "dtr": ("diurnal temperature range", "°C", "growth", ("mean", "min", "max"), "The day–night temperature difference. A larger range helps keep color, aroma and acidity.", "Grid averages understate the real range in valleys and on hillsides.", "tmean"),
+    "prec": ("precipitation", "mm", "rain_water", ("sum", "max", "wet"), "The water supply, and a driver of disease and berry splitting.", "MERRA-2 precipitation is a model blended with observations, so local showers can be underestimated.", None),
+    "rh": ("relative humidity", "%", "disease", ("mean", "min", "max"), "Affects fungal disease risk and how much water leaves lose (transpiration).", "Daily means miss night dew and midday dryness.", None),
+    "qv": ("specific humidity", "g/kg", "disease", ("mean", "min", "max"), "Grams of water vapor per kg of air — how muggy it is.", "Daily means.", None),
+    "vpd": ("vapor pressure deficit (VPD)", "kPa", "drought", ("mean", "min", "max"), "How strongly the air pulls water from leaves. Higher means more water stress.", "Computed from daily mean temperature and humidity, so it is lower than midday values.", None),
+    "et0": ("reference evapotranspiration", "mm", "drought", ("sum", "max"), "Water lost from soil and leaves to evaporation — the irrigation demand.", "The Hargreaves formula uses only temperature and latitude, so wind and humidity effects are left out.", None),
+    "gwtop": ("topsoil moisture", "0–1", "drought", ("mean", "min", "max"), "How wet the topsoil is (0 = dry, 1 = saturated). It shows short dry spells first.", "Model values; they differ from irrigated vineyards.", None),
+    "gwroot": ("root-zone soil moisture", "0–1", "drought", ("mean", "min", "max"), "How wet the deeper soil that roots use is. It shows drought stress.", "Model values; they differ from irrigated vineyards.", None),
+    "solar": ("solar radiation", "MJ/m²/day", "sun_wind", ("mean", "min", "max"), "Sunlight that powers photosynthesis and builds sugar and color. Too much causes sunburn.", "CERES satellite 1° grid values; the last few days are not yet available.", None),
+    "wind": ("wind speed", "m/s", "sun_wind", ("mean", "min", "max"), "Airflow reduces disease, but strong wind breaks shoots and dries vines; calm nights favor radiation frost.", "Daily mean wind at 2 m, so gusts are not captured.", None),
 }
 POWER_COL = {"t2m": "T2M", "tmin": "T2M_MIN", "tmax": "T2M_MAX", "prec": "PRECTOTCORR", "rh": "RH2M", "qv": "QV2M",
              "gwtop": "GWETTOP", "gwroot": "GWETROOT", "solar": "ALLSKY_SFC_SW_DWN", "wind": "WS2M"}
-STAT_LABEL = {"mean": "평균", "min": "최솟값", "max": "최댓값", "sum": "합계", "wet": "비 온 날수"}
+STAT_LABEL = {"mean": "mean", "min": "minimum", "max": "maximum", "sum": "total", "wet": "rainy days"}
 
 # ---------------------------------------------------------------------------
 # 기간 (북반구 달 기준, 남반구는 6개월 밀어 맞춤)
 # ---------------------------------------------------------------------------
-MONTH_STAGE = {1: "한겨울 휴면기", 2: "휴면 끝", 3: "싹트기 전", 4: "발아기", 5: "새순 생장기", 6: "개화기", 7: "착과·알 비대기",
-               8: "착색기", 9: "숙성·수확기", 10: "수확 마무리", 11: "낙엽·휴면 진입", 12: "휴면기"}
+MONTH_NAME = {1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"}
+MONTH_STAGE = {1: "deep dormancy", 2: "late dormancy", 3: "pre-budburst", 4: "budburst", 5: "shoot growth", 6: "flowering", 7: "fruit set & berry growth",
+               8: "veraison", 9: "ripening & harvest", 10: "end of harvest", 11: "leaf fall", 12: "dormancy"}
 # key: (이름, [(북반구 달, 연도 오프셋)], 의미)
-WINDOWS = {f"m{m:02d}": (f"{m}월({MONTH_STAGE[m]})", [(m, 0)], f"북반구 {m}월, 남반구 {(m + 5) % 12 + 1}월로, 포도의 {MONTH_STAGE[m]}에 해당합니다.") for m in range(1, 13)}
+WINDOWS = {f"m{m:02d}": (f"{MONTH_NAME[m]} ({MONTH_STAGE[m]})", [(m, 0)], f"{MONTH_NAME[m]} in the Northern Hemisphere ({MONTH_NAME[(m + 5) % 12 + 1]} in the Southern), the vine's {MONTH_STAGE[m]} stage.") for m in range(1, 13)}
 WINDOWS.update({
-    "winter": ("겨울(12~2월)", [(12, -1), (1, 0), (2, 0)], "포도나무가 쉬는 한겨울입니다(남반구 6~8월)."),
-    "spring": ("봄(3~5월)", [(3, 0), (4, 0), (5, 0)], "싹이 트고 새순이 자라는 시기입니다(남반구 9~11월)."),
-    "summer": ("여름(6~8월)", [(6, 0), (7, 0), (8, 0)], "꽃이 피고 알이 커지며 색이 드는 시기입니다(남반구 12~2월)."),
-    "autumn": ("가을(9~11월)", [(9, 0), (10, 0), (11, 0)], "포도가 익어 수확하고 가지가 여무는 시기입니다(남반구 3~5월)."),
-    "gs": ("생육기(4~10월)", [(m, 0) for m in range(4, 11)], "싹이 트고 수확할 때까지의 생육기 전체입니다(남반구 10~4월)."),
-    "harvest": ("수확기(8~9월)", [(8, 0), (9, 0)], "포도가 익는 마지막 두 달입니다(남반구 2~3월)."),
-    "dormancy": ("휴면기(11~3월)", [(11, -1), (12, -1), (1, 0), (2, 0), (3, 0)], "잎이 진 뒤 다시 싹트기 전까지의 휴면기입니다(남반구 5~9월)."),
-    "year": ("시즌 1년(10~9월)", [(m, -1) for m in (10, 11, 12)] + [(m, 0) for m in range(1, 10)], "수확 다음 달부터 그해 수확까지의 시즌 1년입니다(남반구 4~3월)."),
+    "winter": ("Winter (Dec–Feb)", [(12, -1), (1, 0), (2, 0)], "Midwinter, when vines rest (Jun–Aug in the Southern Hemisphere)."),
+    "spring": ("Spring (Mar–May)", [(3, 0), (4, 0), (5, 0)], "When buds break and shoots grow (Sep–Nov in the Southern Hemisphere)."),
+    "summer": ("Summer (Jun–Aug)", [(6, 0), (7, 0), (8, 0)], "Flowering, berry growth and veraison (Dec–Feb in the Southern Hemisphere)."),
+    "autumn": ("Autumn (Sep–Nov)", [(9, 0), (10, 0), (11, 0)], "Ripening, harvest and cane hardening (Mar–May in the Southern Hemisphere)."),
+    "gs": ("Growing season (Apr–Oct)", [(m, 0) for m in range(4, 11)], "The whole growing season from budburst to harvest (Oct–Apr in the Southern Hemisphere)."),
+    "harvest": ("Harvest period (Aug–Sep)", [(8, 0), (9, 0)], "The last two months of ripening (Feb–Mar in the Southern Hemisphere)."),
+    "dormancy": ("Dormancy (Nov–Mar)", [(11, -1), (12, -1), (1, 0), (2, 0), (3, 0)], "From leaf fall until the next budburst (May–Sep in the Southern Hemisphere)."),
+    "year": ("Season year (Oct–Sep)", [(m, -1) for m in (10, 11, 12)] + [(m, 0) for m in range(1, 10)], "The season year from the month after harvest to the next harvest (Apr–Mar in the Southern Hemisphere)."),
 })
 
 
@@ -201,27 +202,27 @@ def build(daily_by_region: dict, south_by_region: dict, lat_by_region: dict):
                 vid = f"{'m' if wkey.startswith('m') and wkey[1:].isdigit() else 's'}_{wkey.lstrip('m') if wkey[1:].isdigit() else wkey}_{vkey}_{stat}"
                 order += 1
                 if stat == "wet":
-                    name, u, agg, cond = f"{wname} 비 온 날수", "일", "count", "일 강수량 ≥ 1mm"
+                    name, u, agg, cond = f"{wname} rainy days", "days", "count", "daily precipitation ≥ 1 mm"
                 elif stat == "sum":
-                    name, u, agg, cond = f"{wname} {vname} 합계", unit, "sum", "(조건 없음) 기간 합계"
+                    name, u, agg, cond = f"{wname} total {vname}", unit, "sum", "(no condition) period total"
                 elif stat == "mean":
-                    name, u, agg, cond = f"{wname} 평균 {vname}", unit, "mean", "(조건 없음) 기간 평균"
+                    name, u, agg, cond = f"{wname} mean {vname}", unit, "mean", "(no condition) period mean"
                 else:
-                    name, u, agg, cond = f"{wname} {vname} {STAT_LABEL[stat]}", unit, stat, f"(조건 없음) 기간 중 하루 {vname}의 {STAT_LABEL[stat]}"
-                desc = {"mean": f"하루 {vname}을(를) 평균한 값", "min": f"하루 {vname} 가운데 가장 낮은 값", "max": f"하루 {vname} 가운데 가장 높은 값",
-                        "sum": f"하루 {vname}을(를) 모두 더한 값", "wet": "하루 강수량이 1mm 이상이었던 날의 수"}[stat]
+                    name, u, agg, cond = f"{wname} {STAT_LABEL[stat]} {vname}", unit, stat, f"(no condition) {STAT_LABEL[stat]} daily {vname} in the period"
+                desc = {"mean": f"the average daily {vname}", "min": f"the lowest daily {vname}", "max": f"the highest daily {vname}",
+                        "sum": f"the sum of daily {vname}", "wet": "the number of days with at least 1 mm of rain"}[stat]
                 metas.append(dict(
-                    id=vid, family="stats", name=name, category=cat, order=order, unit=u, short=f"{wname} 동안 {desc}",
-                    dataset="CERES" if vkey == "solar" else "MERRA-2", source=f"NASA POWER 일별 {POWER_COL.get(vkey, vname)}",
-                    resolution="약 100km (CERES 1° 격자)" if vkey == "solar" else "약 50km (MERRA-2 격자 한 칸)",
+                    id=vid, family="stats", name=name, category=cat, order=order, unit=u, short=f"{desc[0].upper() + desc[1:]} during {wname}",
+                    dataset="CERES" if vkey == "solar" else "MERRA-2", source=f"NASA POWER daily {POWER_COL.get(vkey, vname)}",
+                    resolution="~100 km (CERES 1° grid)" if vkey == "solar" else "~50 km (one MERRA-2 grid cell)",
                     stage=wname, condition=cond, aggregation=agg, higher_is="neutral", station_var=station if stat == "mean" else None,
                     keywords=[vname, wname.split("(")[0], MONTH_STAGE.get(int(wkey[1:]), "") if wkey[1:].isdigit() else "", STAT_LABEL[stat]],
                     sections=dict(
-                        definition=f"{WINDOWS[wkey][2]} 이 기간 동안 {desc}입니다.",
-                        why=f"{meaning} 생육 단계별로 쪼개 보면 변화가 어느 시기에 몰려 있는지 알 수 있습니다.",
-                        guide="- 기울기가 양수면 값이 커지는 쪽입니다. 같은 변수의 다른 달·계절과 함께 보면 변화 시기를 찾을 수 있습니다.",
-                        caveats=f"- {caveat}\n- 체계적으로 만든 기본 통계 지표라 생산자 결정과의 연결은 핵심 지표보다 간접적입니다.",
-                        references="- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산 (scripts/generate_families.py)\n- NASA POWER — https://power.larc.nasa.gov/",
+                        definition=f"{desc[0].upper() + desc[1:]} during {WINDOWS[wkey][0]}. {WINDOWS[wkey][2]}",
+                        why=f"{meaning} Splitting it by growth stage shows which part of the season the change is concentrated in.",
+                        guide="- A positive slope means the value is rising. Compare with other months and seasons of the same variable to find when the change happens.",
+                        caveats=f"- {caveat}\n- A systematically generated statistic, so its link to grower decisions is less direct than the core indicators.",
+                        references="- Computed from the team data workbook, D_ daily sheets (scripts/generate_families.py)\n- NASA POWER — https://power.larc.nasa.gov/",
                     ),
                 ))
                 for rid, d in D.items():
@@ -229,32 +230,32 @@ def build(daily_by_region: dict, south_by_region: dict, lat_by_region: dict):
                         a = d.slice(vkey, *window_dates(wkey, y, south_by_region[rid]))
                         if a is not None and len(a):
                             v = _stat(a, stat)
-                            put(rid, vid, y, v if stat == "wet" else _r(v, 3 if unit in ("0~1", "kPa") else 2))
+                            put(rid, vid, y, v if stat == "wet" else _r(v, 3 if unit in ("0–1", "kPa") else 2))
 
     # ---- 2) 평년 대비 극값 일수
     EXT = {
-        "tx90": ("tmax", 90, ">", "평년보다 더운 낮", "heat", "worse", "하루 최고기온이 평년(2001~2010년 같은 기간) 상위 10%보다 높았던 날"),
-        "tx10": ("tmax", 10, "<", "평년보다 서늘한 낮", "heat", "neutral", "하루 최고기온이 평년 하위 10%보다 낮았던 날"),
-        "tn90": ("tmin", 90, ">", "평년보다 따뜻한 밤", "temp_frost", "worse", "하루 최저기온이 평년 상위 10%보다 높았던 날"),
-        "tn10": ("tmin", 10, "<", "평년보다 추운 밤", "temp_frost", "worse", "하루 최저기온이 평년 하위 10%보다 낮았던 날"),
-        "pr95": ("prec", 95, ">", "평년 기준 큰비 날", "rain_water", "worse", "하루 강수량이 평년 비 온 날(1mm 이상)의 상위 5%보다 많았던 날"),
+        "tx90": ("tmax", 90, ">", "warmer-than-normal days", "heat", "worse", "days with a maximum temperature above the normal (same period, 2001–2010) top 10%"),
+        "tx10": ("tmax", 10, "<", "cooler-than-normal days", "heat", "neutral", "days with a maximum temperature below the normal bottom 10%"),
+        "tn90": ("tmin", 90, ">", "warmer-than-normal nights", "temp_frost", "worse", "days with a minimum temperature above the normal top 10%"),
+        "tn10": ("tmin", 10, "<", "colder-than-normal nights", "temp_frost", "worse", "days with a minimum temperature below the normal bottom 10%"),
+        "pr95": ("prec", 95, ">", "heavier-than-normal rain days", "rain_water", "worse", "days with more rain than the top 5% of normal rainy days (≥ 1 mm)"),
     }
     for wkey, (wname, _, wmean) in WINDOWS.items():
         for code, (vkey, pct, op, label, cat, higher, desc) in EXT.items():
             vid = f"x_{wkey}_{code}"
             order += 1
             metas.append(dict(
-                id=vid, family="extremes", name=f"{wname} {label} 일수", category=cat, order=order, unit="일",
-                short=f"{wname} 동안 {desc}의 수", dataset="MERRA-2", source=f"NASA POWER 일별 {POWER_COL[vkey]}",
-                resolution="약 50km (MERRA-2 격자 한 칸)", stage=wname, condition=f"평년(2001~2010) {pct} 백분위 {'초과' if op == '>' else '미만'}",
+                id=vid, family="extremes", name=f"{wname} {label}", category=cat, order=order, unit="days",
+                short=f"Number of {desc} during {wname}", dataset="MERRA-2", source=f"NASA POWER daily {POWER_COL[vkey]}",
+                resolution="~50 km (one MERRA-2 grid cell)", stage=wname, condition=f"{'above' if op == '>' else 'below'} the normal (2001–2010) {pct}th percentile",
                 aggregation="count", higher_is=higher, station_var=None,
-                keywords=[label, wname.split("(")[0], "극값", "평년", "이상 기후"],
+                keywords=[label, wname.split("(")[0].strip(), "extremes", "normal", "unusual weather"],
                 sections=dict(
-                    definition=f"{wmean} 이 기간 동안 {desc}의 수입니다. 기준은 그 산지의 2001~2010년 같은 기간 값이라, 산지마다 자기 평소와 비교합니다.",
-                    why="평균이 조금 바뀌어도 극단적인 날은 크게 늘거나 줄 수 있습니다. 산지마다 '평소와 다른 날'이 얼마나 잦아졌는지 같은 잣대로 비교할 수 있습니다.",
-                    guide="- 2001~2010년은 정의상 기간 날 수의 약 10%(큰비는 비 온 날의 5%)입니다. 이후 늘면 그런 날이 잦아진 것입니다.",
-                    caveats="- 기준 기간(2001~2010) 자체가 이미 따뜻해진 시기일 수 있습니다.\n- 체계적으로 만든 지표입니다.",
-                    references="- ETCCDI 백분위 지수 방식을 기간별로 적용 (scripts/generate_families.py)\n- NASA POWER — https://power.larc.nasa.gov/",
+                    definition=f"The number of {desc} during {wname}. {wmean} The baseline is the region's own 2001–2010 values for the same period, so each region is compared with its own normal.",
+                    why="Even a small shift in the average can sharply change how often extreme days occur. This compares how much more often 'unusual days' happen in each region on the same scale.",
+                    guide="- By definition, 2001–2010 averages about 10% of the days in the period (5% of rainy days for heavy rain). A rise after that means such days are becoming more frequent.",
+                    caveats="- The baseline period (2001–2010) may itself already be warmer than older norms.\n- A systematically generated indicator.",
+                    references="- ETCCDI percentile-index method applied per period (scripts/generate_families.py)\n- NASA POWER — https://power.larc.nasa.gov/",
                 ),
             ))
             for rid, d in D.items():
@@ -284,32 +285,32 @@ def build(daily_by_region: dict, south_by_region: dict, lat_by_region: dict):
     def add(code, name, unit, cat, higher, desc, fn):
         etc.append((code, name, unit, cat, higher, desc, fn))
 
-    add("FD", "서리일수", "일", "temp_frost", "worse", "하루 최저기온 < 0°C 인 날 수", lambda d, y, s, b: (lambda a: None if a is None else int((a < 0).sum()))(yr(d, "tmin", y, s)))
-    add("SU", "여름일수", "일", "heat", "worse", "하루 최고기온 > 25°C 인 날 수", lambda d, y, s, b: (lambda a: None if a is None else int((a > 25).sum()))(yr(d, "tmax", y, s)))
-    add("ID", "결빙일수", "일", "temp_frost", "worse", "하루 최고기온 < 0°C 인 날 수", lambda d, y, s, b: (lambda a: None if a is None else int((a < 0).sum()))(yr(d, "tmax", y, s)))
-    add("TR", "열대야일수", "일", "heat", "worse", "하루 최저기온 > 20°C 인 날 수", lambda d, y, s, b: (lambda a: None if a is None else int((a > 20).sum()))(yr(d, "tmin", y, s)))
-    add("TXx", "연 최고 낮기온", "°C", "heat", "worse", "하루 최고기온의 연 최댓값", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.max())))(yr(d, "tmax", y, s)))
-    add("TNx", "연 최고 밤기온", "°C", "heat", "worse", "하루 최저기온의 연 최댓값", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.max())))(yr(d, "tmin", y, s)))
-    add("TXn", "연 최저 낮기온", "°C", "temp_frost", "neutral", "하루 최고기온의 연 최솟값", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.min())))(yr(d, "tmax", y, s)))
-    add("TNn", "연 최저 밤기온", "°C", "temp_frost", "better", "하루 최저기온의 연 최솟값", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.min())))(yr(d, "tmin", y, s)))
-    add("TN10p", "추운 밤 비율", "%", "temp_frost", "worse", "하루 최저기온이 평년 하위 10%보다 낮은 날의 비율", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a < b["tn10"]).mean())))(yr(d, "tmin", y, s)))
-    add("TX10p", "서늘한 낮 비율", "%", "heat", "neutral", "하루 최고기온이 평년 하위 10%보다 낮은 날의 비율", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a < b["tx10"]).mean())))(yr(d, "tmax", y, s)))
-    add("TN90p", "따뜻한 밤 비율", "%", "heat", "worse", "하루 최저기온이 평년 상위 10%보다 높은 날의 비율", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a > b["tn90"]).mean())))(yr(d, "tmin", y, s)))
-    add("TX90p", "더운 낮 비율", "%", "heat", "worse", "하루 최고기온이 평년 상위 10%보다 높은 날의 비율", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a > b["tx90"]).mean())))(yr(d, "tmax", y, s)))
-    add("WSDI", "더위 지속 일수", "일", "heat", "worse", "최고기온이 평년 상위 10%를 넘는 날이 6일 이상 이어진 구간에 속한 날 수", lambda d, y, s, b: (lambda a: None if a is None else _spell_days(a > b["tx90"]))(yr(d, "tmax", y, s)))
-    add("CSDI", "추위 지속 일수", "일", "temp_frost", "worse", "최저기온이 평년 하위 10%보다 낮은 날이 6일 이상 이어진 구간에 속한 날 수", lambda d, y, s, b: (lambda a: None if a is None else _spell_days(a < b["tn10"]))(yr(d, "tmin", y, s)))
-    add("DTR", "연평균 일교차", "°C", "growth", "better", "하루 (최고기온 − 최저기온)의 연평균", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.mean())))(yr(d, "dtr", y, s)))
-    add("Rx1day", "연 최대 1일 강수량", "mm", "rain_water", "worse", "하루 강수량의 연 최댓값", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.max()), 1))(yr(d, "prec", y, s)))
-    add("Rx5day", "연 최대 5일 강수량", "mm", "rain_water", "worse", "연속 5일 강수량 합의 연 최댓값", lambda d, y, s, b: (lambda a: None if a is None or len(a) < 5 else _r(float(np.convolve(a, np.ones(5), "valid").max()), 1))(yr(d, "prec", y, s)))
-    add("SDII", "강수 강도", "mm/일", "rain_water", "worse", "비 온 날(≥1mm)의 하루 평균 강수량", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a >= 1].mean()) if (a >= 1).any() else 0.0))(yr(d, "prec", y, s)))
-    add("R10mm", "10mm 이상 강수일", "일", "rain_water", "worse", "하루 강수량 ≥ 10mm 인 날 수", lambda d, y, s, b: (lambda a: None if a is None else int((a >= 10).sum()))(yr(d, "prec", y, s)))
-    add("R20mm", "20mm 이상 강수일", "일", "rain_water", "worse", "하루 강수량 ≥ 20mm 인 날 수", lambda d, y, s, b: (lambda a: None if a is None else int((a >= 20).sum()))(yr(d, "prec", y, s)))
-    add("R50mm", "50mm 이상 강수일", "일", "rain_water", "worse", "하루 강수량 ≥ 50mm 인 날 수 (사용자 정의 Rnnmm)", lambda d, y, s, b: (lambda a: None if a is None else int((a >= 50).sum()))(yr(d, "prec", y, s)))
-    add("CDD", "최장 무강수 기간", "일", "drought", "worse", "하루 강수량 < 1mm 인 날이 가장 길게 이어진 일수", lambda d, y, s, b: (lambda a: None if a is None else _longest(a < 1))(yr(d, "prec", y, s)))
-    add("CWD", "최장 연속 강수 기간", "일", "rain_water", "worse", "하루 강수량 ≥ 1mm 인 날이 가장 길게 이어진 일수", lambda d, y, s, b: (lambda a: None if a is None else _longest(a >= 1))(yr(d, "prec", y, s)))
-    add("R95p", "매우 많은 비의 양", "mm", "rain_water", "worse", "평년 비 온 날의 상위 5%를 넘는 날 강수량의 합", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a > b["pr95"]].sum()), 1))(yr(d, "prec", y, s)))
-    add("R99p", "극히 많은 비의 양", "mm", "rain_water", "worse", "평년 비 온 날의 상위 1%를 넘는 날 강수량의 합", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a > b["pr99"]].sum()), 1))(yr(d, "prec", y, s)))
-    add("PRCPTOT", "비 온 날 강수 총량", "mm", "rain_water", "neutral", "비 온 날(≥1mm) 강수량의 합", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a >= 1].sum()), 1))(yr(d, "prec", y, s)))
+    add("FD", "Frost days", "days", "temp_frost", "worse", "Days with minimum temperature < 0°C", lambda d, y, s, b: (lambda a: None if a is None else int((a < 0).sum()))(yr(d, "tmin", y, s)))
+    add("SU", "Summer days", "days", "heat", "worse", "Days with maximum temperature > 25°C", lambda d, y, s, b: (lambda a: None if a is None else int((a > 25).sum()))(yr(d, "tmax", y, s)))
+    add("ID", "Ice days", "days", "temp_frost", "worse", "Days with maximum temperature < 0°C", lambda d, y, s, b: (lambda a: None if a is None else int((a < 0).sum()))(yr(d, "tmax", y, s)))
+    add("TR", "Tropical nights", "days", "heat", "worse", "Days with minimum temperature > 20°C", lambda d, y, s, b: (lambda a: None if a is None else int((a > 20).sum()))(yr(d, "tmin", y, s)))
+    add("TXx", "Hottest day of the year", "°C", "heat", "worse", "Annual maximum of daily maximum temperature", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.max())))(yr(d, "tmax", y, s)))
+    add("TNx", "Warmest night of the year", "°C", "heat", "worse", "Annual maximum of daily minimum temperature", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.max())))(yr(d, "tmin", y, s)))
+    add("TXn", "Coldest day of the year", "°C", "temp_frost", "neutral", "Annual minimum of daily maximum temperature", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.min())))(yr(d, "tmax", y, s)))
+    add("TNn", "Coldest night of the year", "°C", "temp_frost", "better", "Annual minimum of daily minimum temperature", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.min())))(yr(d, "tmin", y, s)))
+    add("TN10p", "Share of cold nights", "%", "temp_frost", "worse", "Share of days with minimum temperature below the normal bottom 10%", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a < b["tn10"]).mean())))(yr(d, "tmin", y, s)))
+    add("TX10p", "Share of cool days", "%", "heat", "neutral", "Share of days with maximum temperature below the normal bottom 10%", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a < b["tx10"]).mean())))(yr(d, "tmax", y, s)))
+    add("TN90p", "Share of warm nights", "%", "heat", "worse", "Share of days with minimum temperature above the normal top 10%", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a > b["tn90"]).mean())))(yr(d, "tmin", y, s)))
+    add("TX90p", "Share of warm days", "%", "heat", "worse", "Share of days with maximum temperature above the normal top 10%", lambda d, y, s, b: (lambda a: None if a is None else _r(100 * float((a > b["tx90"]).mean())))(yr(d, "tmax", y, s)))
+    add("WSDI", "Warm spell duration", "days", "heat", "worse", "Days in runs of 6+ consecutive days with maximum temperature above the normal top 10%", lambda d, y, s, b: (lambda a: None if a is None else _spell_days(a > b["tx90"]))(yr(d, "tmax", y, s)))
+    add("CSDI", "Cold spell duration", "days", "temp_frost", "worse", "Days in runs of 6+ consecutive days with minimum temperature below the normal bottom 10%", lambda d, y, s, b: (lambda a: None if a is None else _spell_days(a < b["tn10"]))(yr(d, "tmin", y, s)))
+    add("DTR", "Mean diurnal temperature range", "°C", "growth", "better", "Annual mean of daily (maximum − minimum) temperature", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.mean())))(yr(d, "dtr", y, s)))
+    add("Rx1day", "Wettest day of the year", "mm", "rain_water", "worse", "Annual maximum 1-day precipitation", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a.max()), 1))(yr(d, "prec", y, s)))
+    add("Rx5day", "Wettest 5 days of the year", "mm", "rain_water", "worse", "Annual maximum consecutive 5-day precipitation", lambda d, y, s, b: (lambda a: None if a is None or len(a) < 5 else _r(float(np.convolve(a, np.ones(5), "valid").max()), 1))(yr(d, "prec", y, s)))
+    add("SDII", "Rain intensity", "mm/day", "rain_water", "worse", "Mean precipitation on rainy days (≥ 1 mm)", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a >= 1].mean()) if (a >= 1).any() else 0.0))(yr(d, "prec", y, s)))
+    add("R10mm", "Days with ≥ 10 mm rain", "days", "rain_water", "worse", "Days with daily precipitation ≥ 10 mm", lambda d, y, s, b: (lambda a: None if a is None else int((a >= 10).sum()))(yr(d, "prec", y, s)))
+    add("R20mm", "Days with ≥ 20 mm rain", "days", "rain_water", "worse", "Days with daily precipitation ≥ 20 mm", lambda d, y, s, b: (lambda a: None if a is None else int((a >= 20).sum()))(yr(d, "prec", y, s)))
+    add("R50mm", "Days with ≥ 50 mm rain", "days", "rain_water", "worse", "Days with daily precipitation ≥ 50 mm (user-defined Rnnmm)", lambda d, y, s, b: (lambda a: None if a is None else int((a >= 50).sum()))(yr(d, "prec", y, s)))
+    add("CDD", "Longest dry spell", "days", "drought", "worse", "Longest run of days with precipitation < 1 mm", lambda d, y, s, b: (lambda a: None if a is None else _longest(a < 1))(yr(d, "prec", y, s)))
+    add("CWD", "Longest wet spell", "days", "rain_water", "worse", "Longest run of days with precipitation ≥ 1 mm", lambda d, y, s, b: (lambda a: None if a is None else _longest(a >= 1))(yr(d, "prec", y, s)))
+    add("R95p", "Very wet day rainfall", "mm", "rain_water", "worse", "Total precipitation on days above the normal top 5% of rainy days", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a > b["pr95"]].sum()), 1))(yr(d, "prec", y, s)))
+    add("R99p", "Extremely wet day rainfall", "mm", "rain_water", "worse", "Total precipitation on days above the normal top 1% of rainy days", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a > b["pr99"]].sum()), 1))(yr(d, "prec", y, s)))
+    add("PRCPTOT", "Total wet-day rainfall", "mm", "rain_water", "neutral", "Total precipitation on rainy days (≥ 1 mm)", lambda d, y, s, b: (lambda a: None if a is None else _r(float(a[a >= 1].sum()), 1))(yr(d, "prec", y, s)))
 
     def gsl(d, y, s, b):
         start_from = date(y - 1, 7, 1) if s else date(y, 1, 1)
@@ -339,21 +340,21 @@ def build(daily_by_region: dict, south_by_region: dict, lat_by_region: dict):
             e = end_to
         return (e - a).days
 
-    add("GSL", "생육 가능 기간", "일", "growth", "neutral", "평균기온 > 5°C 가 6일 이어진 첫날부터 하반기에 < 5°C 가 6일 이어진 첫날까지", gsl)
+    add("GSL", "Growing season length", "days", "growth", "neutral", "From the first 6-day run with mean temperature > 5°C to the first 6-day run < 5°C in the second half of the year", gsl)
 
     for code, name, unit, cat, higher, desc, fn in etc:
         vid = f"etccdi_{code.lower()}"
         order += 1
         metas.append(dict(
             id=vid, family="etccdi", name=f"{code} · {name}", category=cat, order=order, unit=unit,
-            short=f"ETCCDI 표준 지수: {desc}", dataset="MERRA-2", source="NASA POWER 일별 (MERRA-2)", resolution="약 50km (MERRA-2 격자 한 칸)",
-            stage="시즌 1년 (전년 10월~9월, 남반구 전년 4월~3월)", condition=desc, aggregation="count" if unit == "일" else "mean",
-            higher_is=higher, station_var=None, keywords=[code, name, "ETCCDI", "극값", "WMO", "기후 지수"],
+            short=f"ETCCDI standard index: {desc}", dataset="MERRA-2", source="NASA POWER daily (MERRA-2)", resolution="~50 km (one MERRA-2 grid cell)",
+            stage="Season year (Oct–Sep; Southern Hemisphere Apr–Mar)", condition=desc, aggregation="count" if unit == "days" else "mean",
+            higher_is=higher, station_var=None, keywords=[code, name, "ETCCDI", "extremes", "WMO", "climate index"],
             sections=dict(
-                definition=f"세계기상기구(WMO) 기후변화 탐지·지수 전문가팀(ETCCDI)이 정한 표준 지수 {code}입니다. {desc}을(를) 시즌 1년(전년 10월~9월, 남반구 전년 4월~3월) 단위로 계산했습니다.",
-                why="전 세계 기후 연구가 같은 정의로 쓰는 지수라, 우리 산지의 변화를 논문·보고서의 다른 지역 결과와 바로 비교할 수 있습니다. 발표에서 '표준 지표로도 같은 결론'이라는 근거가 됩니다.",
-                guide="- 기울기 방향과 단위는 지수 정의를 따릅니다. 백분위 지수의 기준 기간은 2001~2010년입니다.",
-                caveats="- 원래 ETCCDI는 달력 1년·1961~1990년 기준이고 백분위는 날짜별 5일 창으로 정하지만, 여기서는 시즌 1년·2001~2010년·기간 전체 백분위로 단순화했습니다.\n- 50km 격자 값입니다.",
+                definition=f"{code} is a standard index defined by the WMO Expert Team on Climate Change Detection and Indices (ETCCDI): {desc[0].lower() + desc[1:]}, computed per season year (Oct–Sep; Southern Hemisphere Apr–Mar).",
+                why="Climate research worldwide uses these same definitions, so your region's change can be compared directly with results for other regions in papers and reports. It also lets you say in a presentation that standard indices reach the same conclusion.",
+                guide="- Slope direction and units follow the index definition. Percentile indices use 2001–2010 as the baseline.",
+                caveats="- The official ETCCDI uses calendar years, a 1961–1990 baseline and 5-day calendar windows for percentiles; here it is simplified to season years, a 2001–2010 baseline and whole-period percentiles.\n- ~50 km grid values.",
                 references="- Zhang, X. et al. (2011), Indices for monitoring changes in extremes based on daily temperature and precipitation data — https://doi.org/10.1002/wcc.147\n- NASA POWER — https://power.larc.nasa.gov/",
             ),
         ))

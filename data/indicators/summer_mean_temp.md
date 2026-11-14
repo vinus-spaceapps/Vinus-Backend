@@ -1,16 +1,16 @@
 ---
 id: summer_mean_temp
-name: 여름 평균기온
+name: Summer mean temperature
 category: growth
 order: 100
-short: 여름 한 달(7월, 남반구 1월)의 하루 평균기온. 알이 크고 착색을 준비하는 시기
+short: Daily mean temperature over one summer month (July; Southern Hemisphere January) — when berries swell and get ready for veraison
 unit: "°C"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M
+source: NASA POWER daily T2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 여름 (7월, 남반구 1월)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Summer (July; Southern Hemisphere January)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: mean
 robust: false
 higher_is: neutral
 station_var: tmean
-keywords: [여름, 7월, 착색, 알 비대, 숙성 속도]
+keywords: [summer, July, veraison, berry growth, berry size, ripening speed]
 ---
 
-## 정의
-여름 한 달(7월, 남반구 1월) 동안 하루 평균기온을 평균한 값입니다.
+## Definition
+The average of the daily mean temperature over one summer month (July; Southern Hemisphere January).
 
-## 왜 중요한가
-알이 커지는 시기의 기온은 착색 시작 시점과 숙성 속도를 정합니다. 수확 시기 예측과 품종 적합성 판단에 씁니다.
+## Why it matters
+Temperatures while the berries are swelling set when veraison begins and how fast ripening goes. Used to forecast harvest timing and to judge variety suitability.
 
-## 해석 가이드
-- 기울기가 양수면 여름이 더워지는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means summers are getting hotter.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Because it is a 50 km grid average, differences in elevation and hillside position are not captured.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

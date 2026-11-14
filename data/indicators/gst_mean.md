@@ -1,16 +1,16 @@
 ---
 id: gst_mean
-name: 생육기 평균기온
+name: Growing-season mean temperature
 category: growth
 order: 20
-short: 생육기 동안 하루 평균기온의 평균. 세계 와인 산지를 나누는 가장 기본적인 기후 지표
+short: Average of the daily mean temperature over the growing season — the most basic climate indicator for classifying the world's wine regions
 unit: °C
 dataset: MERRA-2
-source: NASA POWER 일별 T2M (MERRA-2 2m 평균기온)
+source: NASA POWER daily T2M (MERRA-2 2 m mean temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,24 +18,24 @@ aggregation: mean
 robust: false
 higher_is: neutral
 station_var: tmean
-keywords: [평균기온, 기온, 따뜻, 온난화, 기후대, 품종, 스타일, GST, 기온 상승]
+keywords: [mean temperature, temperature, warm, warming, climate zone, variety, wine style, GST, rising temperature]
 ---
 
-## 정의
-생육기(북반구 4월 1일~10월 31일, 남반구 10월 1일~4월 30일) 동안 하루 평균기온을 평균한 값입니다. 와인 기후 연구에서 산지를 나누는 기준(Growing Season Temperature)으로 가장 널리 씁니다.
+## Definition
+The average of the daily mean temperature over the growing season (Apr 1–Oct 31 in the Northern Hemisphere, Oct 1–Apr 30 in the Southern Hemisphere). It is the most widely used benchmark for classifying regions in wine climate research (Growing Season Temperature).
 
-## 왜 중요한가
-어떤 스타일의 와인이 그 산지에서 나오는지를 가장 간단하게 보여 줍니다. 값이 오르면 지금 품종이 그 산지의 적정 범위를 벗어나는지 확인할 수 있어, 품종 교체 계획에 씁니다.
+## Why it matters
+It is the simplest way to show what style of wine a region produces. As it rises, you can check whether your current varieties are moving out of their suitable range for the region, so it is used for planning variety changes.
 
-## 해석 가이드
-- 기울기가 양수면 산지가 더 따뜻한 기후대로 옮겨 가는 중입니다.
-- 구간(대략): 13~15°C 서늘함(리슬링·피노 누아), 15~17°C 중간(샤르도네·메를로), 17~19°C 따뜻함(카베르네 소비뇽·시라), 19~21°C 더움(그르나슈·진판델).
+## How to read
+- A positive slope (upward trend) means the region is shifting into a warmer climate zone.
+- Bands (approximate): 13–15°C cool (Riesling, Pinot Noir), 15–17°C intermediate (Chardonnay, Merlot), 17–19°C warm (Cabernet Sauvignon, Syrah), 19–21°C hot (Grenache, Zinfandel).
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Because it is a 50 km grid average, differences in elevation and hillside position are not captured.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/
 - Jones, G. V. et al. (2005), Climate change and global wine quality — https://doi.org/10.1007/s10584-005-4704-2

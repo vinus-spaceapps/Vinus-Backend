@@ -1,16 +1,16 @@
 ---
 id: annual_frost_days
-name: 연간 서리일수
+name: Annual frost days
 category: temp_frost
 order: 90
-short: 시즌 1년 동안 최저기온이 0°C 이하였던 날 수
-unit: "일"
+short: Number of days in one season-year when the minimum temperature was 0°C or below
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MIN
+source: NASA POWER daily T2M_MIN
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 시즌 1년 (전년 10월~9월, 남반구 전년 4월~3월)
-condition: 일 최저기온 ≤ 0°C
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Season-year (previous Oct–Sep; Southern Hemisphere previous Apr–Mar)
+condition: daily minimum temperature ≤ 0°C
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmin
-keywords: [서리, 영하, 서리일, 추위, 연간]
+keywords: [frost, frost days, below freezing, freezing nights, cold, annual frost, yearly]
 ---
 
-## 정의
-시즌 1년(전년 10월~9월, 남반구 전년 4월~3월) 동안 하루 최저기온이 0°C 이하였던 날의 수입니다.
+## Definition
+The number of days in one season-year (October of the previous year to September; Southern Hemisphere: April of the previous year to March) when the daily minimum temperature was 0°C or below.
 
-## 왜 중요한가
-산지의 전반적인 추위 정도를 보여 주는 가장 단순한 지표입니다. 서리일수가 크게 줄면 그 산지의 재배 가능 품종 폭이 넓어집니다.
+## Why it matters
+The simplest indicator of how cold a region is overall. When frost days drop sharply, the range of grape varieties the region can grow widens.
 
-## 해석 가이드
-- 기울기가 음수면 서리가 내리는 날이 줄어드는 쪽입니다. 봄 서리 지표와 같이 보면 '서리가 언제 줄었는지' 알 수 있습니다.
+## How to read
+- A negative slope means frost days are becoming fewer. Read it alongside the spring frost indicators to see *when* in the year frost has declined.
 
-## 주의점
-- 오카나간은 격자 기온이 관측소보다 약 5°C 낮아 추위 지표가 부풀 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- In the Okanagan, grid temperatures run about 5°C colder than the weather station, so cold indicators may be inflated.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

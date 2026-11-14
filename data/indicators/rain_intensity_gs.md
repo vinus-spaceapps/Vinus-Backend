@@ -1,38 +1,38 @@
 ---
 id: rain_intensity_gs
-name: 생육기 강수 강도
+name: Rain intensity (growing season)
 category: rain_water
 order: 160
-short: 생육기 동안 비가 온 날 하루 평균 강수량. 비가 얼마나 세차게 오는지
-unit: "mm/일"
+short: Average rain per rainy day during the growing season. How hard the rain falls
+unit: "mm/day"
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR
+source: NASA POWER daily PRECTOTCORR
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 비 온 날(≥1mm) 강수량 합 ÷ 비 온 날 수
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Total rain on wet days (≥1 mm) ÷ number of wet days
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: mean
 robust: false
 higher_is: worse
-keywords: [강수 강도, 세찬 비, 폭우, 토양 유실, 유거수]
+keywords: [rain intensity, hard rain, downpour, soil erosion, runoff, drainage, cover crop]
 ---
 
-## 정의
-생육기 동안 비 온 날(1mm 이상)의 강수량을 모두 더해 비 온 날 수로 나눈 값입니다.
+## Definition
+The total rain on rainy days (1 mm or more) during the growing season, divided by the number of rainy days.
 
-## 왜 중요한가
-같은 양의 비라도 한꺼번에 세차게 오면 땅에 스며들지 못하고 흘러가 버려, 물은 부족하고 흙은 쓸려 갑니다. 피복작물·배수 관리 판단에 씁니다.
+## Why it matters
+Even with the same total, rain that falls hard all at once runs off instead of soaking in, so the vines end up short of water while the soil gets washed away. It is used for decisions on cover crops and drainage.
 
-## 해석 가이드
-- 기울기가 양수면 비가 더 세차게 오는 쪽입니다.
+## How to read
+- A positive slope means rain is falling harder.
 
-## 주의점
-- MERRA-2 강수는 모델에 관측을 보정한 값이라 국지성 비를 작게 잡을 수 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- MERRA-2 precipitation is model output corrected with observations, so it can underestimate local rain.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

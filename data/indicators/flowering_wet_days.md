@@ -1,38 +1,38 @@
 ---
 id: flowering_wet_days
-name: 개화기 비 온 날수
+name: Rainy days at flowering
 category: rain_water
 order: 70
-short: 꽃이 피는 달(6월) 동안 비(1mm 이상)가 온 날 수
-unit: "일"
+short: Number of days with rain (1 mm or more) during the flowering month (June)
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR
+source: NASA POWER daily PRECTOTCORR
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 개화기 (6월, 남반구 12월)
-condition: 일 강수량 ≥ 1mm
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Flowering (Jun; Southern Hemisphere Dec)
+condition: Daily precipitation ≥ 1 mm
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [개화, 꽃떨이, 착과, 비, 수확량]
+keywords: [flowering, bloom, rainy days, coulure, fruit set, rain, yield]
 ---
 
-## 정의
-개화기 동안 하루 강수량이 1mm 이상이었던 날의 수입니다.
+## Definition
+The number of days during flowering with 1 mm or more of rain.
 
-## 왜 중요한가
-꽃이 필 때 비가 자주 오면 꽃가루받이가 안 돼 열매가 덜 맺힙니다(꽃떨이). 개화기 강수량(양)과 함께 그해 수확량을 가늠하는 데 씁니다.
+## Why it matters
+Frequent rain during flowering prevents pollination, so fewer berries set (coulure). It is used together with flowering rainfall (the amount) to estimate that year's yield.
 
-## 해석 가이드
-- 기울기가 양수면 개화기 비가 잦아지는 쪽입니다.
+## How to read
+- A positive slope means rain at flowering is becoming more frequent.
 
-## 주의점
-- 실제 개화 시기는 해마다 달라 한 달 고정 기간은 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Actual flowering dates vary from year to year, so a fixed one-month window is an approximation.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

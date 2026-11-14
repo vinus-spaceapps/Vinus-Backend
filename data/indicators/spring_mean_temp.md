@@ -1,16 +1,16 @@
 ---
 id: spring_mean_temp
-name: 봄 평균기온
+name: Spring mean temperature
 category: growth
 order: 70
-short: 봄 석 달(3~5월, 남반구 9~11월)의 하루 평균기온. 싹트는 시기를 정하는 기온
+short: Daily mean temperature over the three spring months (Mar–May; Southern Hemisphere Sep–Nov) — the temperature that sets when buds break
 unit: °C
 dataset: MERRA-2
-source: NASA POWER 일별 T2M (MERRA-2 2m 평균기온)
+source: NASA POWER daily T2M (MERRA-2 2 m mean temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 봄 (3~5월, 남반구 9~11월)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Spring (Mar–May; Southern Hemisphere Sep–Nov)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: mean
 robust: false
 higher_is: neutral
 station_var: tmean
-keywords: [봄, 봄 기온, 발아 시기, 싹, 빨라진 봄, 이른 봄]
+keywords: [spring, spring temperature, budburst timing, buds, earlier spring, early spring, warm spring]
 ---
 
-## 정의
-봄 석 달(북반구 3~5월, 남반구 9~11월) 동안 하루 평균기온을 평균한 값입니다.
+## Definition
+The average of the daily mean temperature over the three spring months (Mar–May in the Northern Hemisphere, Sep–Nov in the Southern Hemisphere).
 
-## 왜 중요한가
-봄이 따뜻할수록 싹이 일찍 틉니다. 봄은 빨리 따뜻해지는데 늦서리는 그대로라면 서리 피해가 커지므로, 싹트는 날짜·서리 지표와 함께 서리 대비 판단에 씁니다.
+## Why it matters
+The warmer the spring, the earlier buds break. If spring warms up quickly while late frosts stay the same, frost damage grows, so this is used together with the green-up date and frost indicators to decide on frost protection.
 
-## 해석 가이드
-- 기울기가 양수면 봄이 따뜻해져 싹이 빨리 트는 쪽입니다. 싹트는 날짜(그린업)와 같은 방향인지 보세요.
+## How to read
+- A positive slope (upward trend) means spring is warming and buds are breaking earlier. Check whether it moves in the same direction as the green-up date.
 
-## 주의점
-- 50km 격자 평균입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- A 50 km grid average.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

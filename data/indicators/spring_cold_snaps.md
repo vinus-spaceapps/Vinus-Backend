@@ -1,16 +1,16 @@
 ---
 id: spring_cold_snaps
-name: 봄 급랭일
+name: Spring cold snaps
 category: temp_frost
 order: 50
-short: 봄 동안 하루 평균기온이 전날보다 5°C 이상 뚝 떨어진 날 수
-unit: "일"
+short: Number of spring days when the daily mean temperature dropped by 5°C or more from the day before
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M
+source: NASA POWER daily T2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 봄 (4/1~5/31, 남반구 10/1~11/30)
-condition: 하루 평균기온이 전날보다 5°C 이상 떨어진 날
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Spring (Apr 1–May 31; Southern Hemisphere Oct 1–Nov 30)
+condition: daily mean temperature 5°C or more below the previous day's
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmean
-keywords: [급랭, 꽃샘추위, 봄 추위, 기온 급변, 날씨 변덕, 냉해]
+keywords: [cold snap, sudden cold, spring chill, temperature drop, erratic weather, cold injury, late cold spell]
 ---
 
-## 정의
-봄(4~5월, 남반구 10~11월) 중 하루 평균기온이 전날보다 5°C 이상 떨어진 날의 수입니다.
+## Definition
+The number of days in spring (April–May; Southern Hemisphere October–November) when the daily mean temperature fell by 5°C or more from the previous day.
 
-## 왜 중요한가
-따뜻한 날씨에 새순이 빨리 자란 뒤 갑자기 추워지면 서리가 아니어도 새순이 상하고 꽃눈 분화가 흔들립니다. 서리 대비 시설과 보험 판단을 보완합니다.
+## Why it matters
+When young shoots grow fast in warm weather and it then turns cold suddenly, the shoots can be damaged even without frost, and flower-bud formation can be disrupted. This complements frost-protection and insurance decisions.
 
-## 해석 가이드
-- 기울기가 양수면 봄 날씨의 급변이 잦아지는 쪽입니다.
+## How to read
+- A positive slope means sudden swings in spring weather are becoming more frequent.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- As a 50 km grid average, it does not reflect differences in elevation or slope.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

@@ -1,16 +1,16 @@
 ---
 id: gs_tmax_mean
-name: 생육기 평균 최고기온
+name: Growing-season mean maximum temperature
 category: heat
 order: 50
-short: 생육기 동안 하루 최고기온의 평균. 낮 더위의 수준
+short: Average daily maximum temperature over the growing season; the level of daytime heat
 unit: "°C"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MAX
+source: NASA POWER daily T2M_MAX
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: mean
 robust: false
 higher_is: worse
 station_var: tmax
-keywords: [낮 기온, 최고기온, 한낮, 더위, 광합성]
+keywords: [daytime temperature, maximum temperature, daily high, midday heat, heat, photosynthesis, hot afternoons]
 ---
 
-## 정의
-생육기 동안 하루 최고기온을 평균한 값입니다.
+## Definition
+The average of the daily maximum temperatures over the growing season.
 
-## 왜 중요한가
-평균기온이 같아도 낮이 더 뜨거워지면 한낮 광합성이 멈추는 시간이 늘어납니다. 낮 더위가 오르는지 밤 기온이 오르는지 구분할 때 생육기 평균 최저기온과 함께 씁니다.
+## Why it matters
+Even with the same mean temperature, hotter days mean more hours when photosynthesis shuts down at midday. Used together with the growing-season mean minimum temperature to tell whether it is the daytime heat or the night-time temperature that is rising.
 
-## 해석 가이드
-- 기울기가 양수면 낮이 더워지는 쪽입니다.
+## How to read
+- A positive slope means days are getting hotter.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- As a 50 km grid average, it does not reflect differences in elevation or slope.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

@@ -1,38 +1,38 @@
 ---
 id: cloudy_days_gs
-name: 생육기 흐린 날수
+name: Growing-season cloudy days
 category: sun_wind
 order: 60
-short: 생육기 동안 구름이 짙어 햇빛이 크게 모자랐던 날 수
-unit: "일"
+short: Number of days in the growing season when thick cloud cut sunlight sharply
+unit: "days"
 dataset: CERES
-source: NASA POWER 일별 ALLSKY_SFC_SW_DWN (CERES)
+source: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES)
 start_year: 2001
-resolution: 약 100km (CERES 1° 격자)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 일사량 < 맑은 날 일사량(0.75 × 대기 상단 일사량)의 40%
+resolution: ~100 km (CERES 1° grid)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Solar radiation < 40% of clear-sky radiation (0.75 × top-of-atmosphere radiation)
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [흐린 날, 구름, 장마, 일조 부족, 당도]
+keywords: [cloudy days, clouds, overcast, low sunlight, rainy season, sugar, ripening]
 ---
 
-## 정의
-생육기 동안 실제 일사량이 그날 맑은 하늘에서 받을 수 있는 일사량의 40% 미만이었던 날의 수입니다.
+## Definition
+The number of days in the growing season when actual solar radiation was less than 40% of what a clear sky could have delivered that day.
 
-## 왜 중요한가
-흐린 날이 이어지면 광합성이 줄어 당이 덜 오르고 잎이 오래 젖어 병이 번집니다. 장마가 긴 산지의 품질 변동과 방제 판단에 씁니다.
+## Why it matters
+Runs of cloudy days cut photosynthesis, so sugars build up less, and keep leaves wet longer, so disease spreads. Used to judge quality swings and spraying in regions with a long rainy season.
 
-## 해석 가이드
-- 기울기가 양수면 흐린 날이 늘어나는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means more cloudy days.
 
-## 주의점
-- CERES 1° 격자 값입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Values come from the CERES 1° grid.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

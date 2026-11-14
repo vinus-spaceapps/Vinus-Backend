@@ -10,7 +10,7 @@ from . import catalog
 from .series import SeriesUnavailable, get_series
 from .stats import analyze_series, bh_fdr, pearson
 
-RESOLUTION_NOTE = "결과는 산지 단위(수십 km) 평균이며 밭 하나를 대표하지 않습니다."
+RESOLUTION_NOTE = "Results are regional averages (tens of km) and do not represent a single vineyard."
 
 
 class YearValue(BaseModel):
@@ -43,7 +43,7 @@ def _verdict_sentence(meta: dict, region: dict, start: int, end: int, st: dict) 
     v = st["verdict"]
     lo, hi = st["ci_per_decade"]
     head = f"{region['name']} · {meta['name']} · {start}~{end}"
-    rate = f"10년에 {_fmt(st['slope_per_decade'])}{unit} (95% 신뢰구간 {_fmt(lo)} ~ {_fmt(hi)})"
+    rate = f"{_fmt(st['slope_per_decade'])} {unit} per decade (95% CI {_fmt(lo)} to {_fmt(hi)})"
     body = f"{v['label']} · {rate} · Mann-Kendall p = {st['mk']['p']:.3f}"
     body += detect_sentence(st.get("detectable"), prefix=" · ")
     return f"{head}\n{body}"
@@ -53,10 +53,10 @@ def detect_sentence(det: Optional[dict], prefix: str = "") -> str:
     if not det:
         return ""
     if det["status"] == "need_more":
-        return f"{prefix}현재 추세가 유지되면 약 {det['more_years']}년 더 관측해야 유의해질 수 있음(근사)"
+        return f"{prefix}if the current trend holds, about {det['more_years']} more years of data may be needed to reach significance (approx.)"
     if det["status"] == "length_enough":
-        return f"{prefix}관측 기간은 충분한 편이라, 실제 변화는 지금 기울기보다 작거나 없을 수 있음"
-    return f"{prefix}기울기가 0에 가까워 탐지 가능 연수를 추정할 수 없음"
+        return f"{prefix}the record is already long enough, so the real change may be smaller than this slope, or none"
+    return f"{prefix}the slope is close to zero, so years-to-detection cannot be estimated"
 
 
 def _trend_points(years: list, intercept: float, slope: float) -> list:
@@ -69,7 +69,7 @@ def analyze_one(meta: dict, region_id: str, start: int, end: int, threshold=None
     except SeriesUnavailable as e:
         raise AnalysisError(str(e)) from e
     if len(s.years) < 5:
-        raise AnalysisError(f"{meta['name']}: 분석 가능한 연도가 {len(s.years)}개뿐입니다 (5개 이상 필요).")
+        raise AnalysisError(f"{meta['name']}: only {len(s.years)} years can be analyzed (at least 5 needed).")
     st = analyze_series(s.years, s.values, robust=meta["robust"])
     return {"series": s, "stats": st}
 
@@ -77,15 +77,15 @@ def analyze_one(meta: dict, region_id: str, start: int, end: int, threshold=None
 def run_analysis(req: AnalyzeRequest) -> dict:
     region = catalog.region(req.region)
     if region is None:
-        raise AnalysisError(f"알 수 없는 산지입니다: {req.region}")
+        raise AnalysisError(f"Unknown region: {req.region}")
     if req.start >= req.end:
-        raise AnalysisError("시작 연도는 끝 연도보다 앞서야 합니다.")
+        raise AnalysisError("Start year must be before end year.")
 
     results = []
     for var_id in req.variables:
         meta = catalog.indicator(var_id)
         if meta is None:
-            raise AnalysisError(f"알 수 없는 변수입니다: {var_id}")
+            raise AnalysisError(f"Unknown indicator: {var_id}")
         thr = req.thresholds.get(var_id, meta.get("threshold"))
         main = analyze_one(meta, region["id"], req.start, req.end, thr)
         s, st = main["series"], main["stats"]
@@ -124,16 +124,16 @@ def run_analysis(req: AnalyzeRequest) -> dict:
             mine = {y: v for y, v in zip(s.years, s.values)}
             corr = pearson([mine[y] for y in common], [user[y] for y in common]) if len(common) >= 4 else None
             overlay = {
-                "label": req.user_label or "내 기록",
+                "label": req.user_label or "My record",
                 "points": [{"year": y, "value": user[y]} for y in sorted(user)],
                 "correlation": corr,
                 "common_years": len(common),
-                "note": "상관은 인과가 아닙니다. 같은 해에 같이 움직였다는 뜻일 뿐입니다.",
+                "note": "Correlation is not causation. It only means the two moved together in the same years.",
             }
 
         notes = list(s.notes)
         if req.stages:
-            notes.append("입력한 생육 단계 날짜는 실제 일별 데이터 집계를 연결하면 반영됩니다. 지금 값은 산지 기본 날짜 기준입니다.")
+            notes.append("Your growth-stage dates will be used once daily-data aggregation is connected. Current values use the region's default dates.")
 
         results.append(
             {
@@ -176,16 +176,16 @@ def ground_check(meta: dict, val: Optional[dict]) -> Optional[dict]:
     st = val["station"]
     parts = []
     if var in ("tmin", "tmean"):
-        parts.append(f"최저기온 평균 오차 {st['tmin_bias']:+.2f}°C(상관 {st['tmin_corr']:.2f})")
+        parts.append(f"a mean minimum-temperature bias of {st['tmin_bias']:+.2f}°C (correlation {st['tmin_corr']:.2f})")
     if var in ("tmax", "tmean"):
-        parts.append(f"최고기온 평균 오차 {st['tmax_bias']:+.2f}°C(상관 {st['tmax_corr']:.2f})")
-    sentence = f"근처 지상 관측소({st['id']})와 비교하면 격자 값은 {', '.join(parts)}입니다."
+        parts.append(f"a mean maximum-temperature bias of {st['tmax_bias']:+.2f}°C (correlation {st['tmax_corr']:.2f})")
+    sentence = f"Compared with the nearby weather station ({st['id']}), the grid values show {' and '.join(parts)}."
     big = max(abs(st["tmin_bias"]) if var in ("tmin", "tmean") else 0, abs(st["tmax_bias"]) if var in ("tmax", "tmean") else 0)
     if big >= 2:
-        sentence += " 오차가 커서 절대값보다 변화 방향 위주로 보는 것이 좋습니다."
+        sentence += " The bias is large, so focus on the direction of change rather than absolute values."
     modis = val.get("modis")
     if var == "tmin" and modis:
-        sentence += f" 1km 위성(MODIS)으로 보면 같은 격자 안에서도 밤 지표면 온도가 평균 {modis['pixel_spread_mean']:.1f}°C 차이 납니다."
+        sentence += f" At 1 km (MODIS satellite), night-time land surface temperature varies by {modis['pixel_spread_mean']:.1f}°C on average within the same grid cell."
     return {"station": st, "modis": modis if var == "tmin" else None, "sentence": sentence}
 
 
@@ -193,7 +193,7 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
     """인사이트 AI 입력: 엔진이 미리 계산한 재료 묶음. AI 는 여기 있는 숫자만 씁니다."""
     res = next((r for r in analysis["results"] if r["variable"]["id"] == var_id), None)
     if res is None:
-        raise AnalysisError(f"분석 결과에 없는 변수입니다: {var_id}")
+        raise AnalysisError(f"Indicator not in this analysis: {var_id}")
     meta = catalog.indicator(var_id)
     st = res["stats"]
     region = analysis["region"]
@@ -231,7 +231,7 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
         "ground_check": ground_check(meta, analysis.get("validation")),
         "resolution_note": analysis["resolution_note"],
         "trend": {
-            "method": "Sen 기울기" if st["method"] == "sen" else "OLS 기울기",
+            "method": "Sen slope" if st["method"] == "sen" else "OLS slope",
             "slope_per_decade": r4(st["slope_per_decade"]),
             "ci95_per_decade": [r4(st["ci_per_decade"][0]), r4(st["ci_per_decade"][1])],
             "ols_slope_per_decade": r4(st["ols"]["slope_per_decade"]),
@@ -267,6 +267,6 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
         ),
         "user_context": context or {},
         "documents": [
-            {"id": f"{meta['id']}.md", "title": f"{meta['name']} 지표 문서", "sections": meta["sections"]},
+            {"id": f"{meta['id']}.md", "title": f"{meta['name']} indicator notes", "sections": meta["sections"]},
         ],
     }

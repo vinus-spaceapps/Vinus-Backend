@@ -161,20 +161,20 @@ def get_series(meta: dict, region_id: str, start: int, end: int, threshold=None)
     first = max(start, meta["start_year"])
     last = min(end, DATA_END_YEAR)
     if first != start:
-        notes.append(f"{meta.get('dataset')} 자료는 {meta['start_year']}년 시즌부터 있어 {first}년부터 분석했습니다.")
+        notes.append(f"{meta.get('dataset')} data starts with the {meta['start_year']} season, so the analysis starts in {first}.")
     if last != end:
-        notes.append(f"자료는 {DATA_END_YEAR}년 시즌까지입니다.")
+        notes.append(f"Data runs through the {DATA_END_YEAR} season.")
 
     if meta.get("family", "core") != "core":
         data = generated_values(var_id, region_id)
         if data is None:
-            raise SeriesUnavailable(f"{meta['name']}: 이 산지의 값이 없습니다.")
+            raise SeriesUnavailable(f"{meta['name']}: no values for this region.")
         years = [y for y in range(first, last + 1) if y in data]
         missing = (last - first + 1) - len(years)
         if missing:
             gaps = [y for y in range(first, last + 1) if y not in data]
-            notes.append(f"계산할 수 없는 {missing}개 연도({', '.join(map(str, gaps[:5]))}{' 등' if len(gaps) > 5 else ''})는 제외했습니다.")
-        return SeriesResult(years, [data[y] for y in years], False, "NASA POWER 일별 원자료로 계산 (자동 생성 지표)", notes)
+            notes.append(f"Excluded {missing} year(s) that could not be computed ({', '.join(map(str, gaps[:5]))}{', …' if len(gaps) > 5 else ''}).")
+        return SeriesResult(years, [data[y] for y in years], False, "Computed from NASA POWER daily data (auto-generated indicator)", notes)
 
     path = real_series_path(var_id, region_id, thr, default_thr)
     if path is not None:
@@ -183,15 +183,15 @@ def get_series(meta: dict, region_id: str, start: int, end: int, threshold=None)
         missing = (last - first + 1) - len(years)
         if missing:
             gaps = [y for y in range(first, last + 1) if y not in data]
-            shown = ", ".join(map(str, gaps[:5])) + (" 등" if len(gaps) > 5 else "")
-            notes.append(f"집계 자료에 {missing}개 연도({shown})가 비어 있어 제외했습니다.")
-        return SeriesResult(years, [data[y] for y in years], False, f"NASA {meta.get('dataset')} 팀 집계값 ({path.parent.name}/{path.name})", notes)
+            shown = ", ".join(map(str, gaps[:5])) + (", …" if len(gaps) > 5 else "")
+            notes.append(f"Excluded {missing} year(s) missing from the aggregated data ({shown}).")
+        return SeriesResult(years, [data[y] for y in years], False, f"NASA {meta.get('dataset')}, team-aggregated ({path.parent.name}/{path.name})", notes)
 
     if has_real_data(var_id):
         # 실제 집계가 있는 지표인데 이 산지·기준값만 없으면 지어내지 않고 알립니다.
-        what = f"기준값 {_thr_name(thr)}{meta.get('threshold_unit') or ''}" if thr != default_thr else "이 산지"
-        raise SeriesUnavailable(f"{meta['name']}: {what}의 실제 집계가 아직 없습니다.")
+        what = f"threshold {_thr_name(thr)}{meta.get('threshold_unit') or ''}" if thr != default_thr else "this region"
+        raise SeriesUnavailable(f"{meta['name']}: no real data yet for {what}.")
 
     data = mock_values(var_id, region_id, meta.get("aggregation", "count"), thr, default_thr)
     years = list(range(first, last + 1))
-    return SeriesResult(years, [data[y] for y in years], True, "예시 데이터 (목업, 실제 관측 아님)", notes)
+    return SeriesResult(years, [data[y] for y in years], True, "Sample data (mock-up, not real observations)", notes)

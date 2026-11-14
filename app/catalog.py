@@ -19,17 +19,23 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 INDICATOR_DIR = DATA_DIR / "indicators"
 
 CATEGORIES = [
-    {"id": "temp_frost", "name": "기온·서리"},
-    {"id": "heat", "name": "더위"},
-    {"id": "rain_water", "name": "비"},
-    {"id": "drought", "name": "가뭄·토양"},
-    {"id": "disease", "name": "병해·습도"},
-    {"id": "sun_wind", "name": "햇빛·바람"},
-    {"id": "smoke_air", "name": "연기·대기"},
-    {"id": "growth", "name": "생육·시기"},
+    {"id": "temp_frost", "name": "Temperature & frost"},
+    {"id": "heat", "name": "Heat"},
+    {"id": "rain_water", "name": "Rain"},
+    {"id": "drought", "name": "Drought & soil"},
+    {"id": "disease", "name": "Disease & humidity"},
+    {"id": "sun_wind", "name": "Sun & wind"},
+    {"id": "smoke_air", "name": "Smoke & air"},
+    {"id": "growth", "name": "Growth & timing"},
 ]
 
 SECTION_KEYS = {
+    "Definition": "definition",
+    "Why it matters": "why",
+    "How to read": "guide",
+    "Caveats": "caveats",
+    "References": "references",
+    # 예전 한국어 제목도 읽음
     "정의": "definition",
     "왜 중요한가": "why",
     "해석 가이드": "guide",
@@ -43,7 +49,7 @@ DATA_END_YEAR = 2026
 def _parse_md(text: str) -> dict:
     m = re.match(r"^---\s*\n(.*?)\n---\s*\n(.*)$", text, re.S)
     if not m:
-        raise ValueError("frontmatter(---) 가 없습니다")
+        raise ValueError("missing frontmatter (---)")
     meta = yaml.safe_load(m.group(1)) or {}
     body = m.group(2)
     sections = {}
@@ -63,10 +69,10 @@ GENERATED_FILE = DATA_DIR / "indicators_generated.json"
 
 # 지표 묶음: core 는 사람이 쓴 지표 md, 나머지는 scripts/generate_families.py 가 만든 것
 FAMILIES = [
-    {"id": "core", "name": "핵심 지표"},
-    {"id": "etccdi", "name": "기후 극값 지수 (ETCCDI)"},
-    {"id": "extremes", "name": "평년 대비 극값 일수"},
-    {"id": "stats", "name": "월·계절 기본 통계"},
+    {"id": "core", "name": "Core indicators"},
+    {"id": "etccdi", "name": "Climate extremes (ETCCDI)"},
+    {"id": "extremes", "name": "Days beyond normal"},
+    {"id": "stats", "name": "Monthly & seasonal stats"},
 ]
 
 

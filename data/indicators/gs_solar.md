@@ -1,39 +1,39 @@
 ---
 id: gs_solar
-name: 생육기 일사량
+name: Growing-season solar radiation
 category: sun_wind
 order: 10
-short: 생육기 동안 땅에 닿은 햇빛 에너지의 하루 평균
-unit: MJ/m²·일
+short: Daily average of the sunlight energy reaching the ground during the growing season
+unit: MJ/m²/day
 dataset: CERES
-source: NASA POWER 일별 ALLSKY_SFC_SW_DWN (CERES 위성 지표 일사량)
+source: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES satellite surface solar radiation)
 start_year: 2001
-resolution: 약 100km (CERES 1° 격자)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: (조건 없음) 기간 평균
+resolution: ~100 km (CERES 1° grid)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: mean
 robust: false
 higher_is: neutral
-keywords: [햇빛, 일사량, 일조, 맑은 날, 구름, 광합성, 일소]
+keywords: [sunlight, solar radiation, sunshine, sunny days, clouds, photosynthesis, sunburn]
 ---
 
-## 정의
-생육기 동안 구름을 포함한 실제 날씨에서 땅 1m²에 하루에 닿은 햇빛 에너지(MJ)를 평균한 값입니다. NASA CERES 위성 자료를 NASA POWER가 일별로 제공합니다.
+## Definition
+The average sunlight energy (MJ) reaching 1 m² of ground per day during the growing season, under actual weather including clouds. NASA POWER provides the NASA CERES satellite data at a daily time step.
 
-## 왜 중요한가
-햇빛은 광합성과 당 축적의 원천입니다. 일사량이 늘면 숙성은 빨라지지만 일소(햇볕 데임) 위험도 커져, 잎 관리(엽면 관리)와 차광망 투자 판단에 씁니다.
+## Why it matters
+Sunlight is the source of photosynthesis and sugar build-up. More solar radiation speeds up ripening but also raises the risk of sunburn (sun scald on the berries), so it is used for canopy management (managing the leaves) and decisions on investing in shade nets.
 
-## 해석 가이드
-- 기울기가 양수면 맑은 날이 늘거나 구름이 줄어드는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means more clear days or less cloud.
 
-## 주의점
-- MERRA-2가 아니라 CERES 자료입니다. 최근 며칠은 아직 값이 없습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- This is CERES data, not MERRA-2. The most recent few days do not have values yet.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/
 - NASA CERES — https://ceres.larc.nasa.gov/

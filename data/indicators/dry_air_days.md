@@ -1,38 +1,38 @@
 ---
 id: dry_air_days
-name: 건조한 날수
+name: Dry-air days
 category: drought
 order: 70
-short: 생육기 동안 하루 평균 습도가 40% 미만으로 메마른 날 수
-unit: "일"
+short: Number of growing-season days when daily mean humidity is below 40%
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 RH2M
+source: NASA POWER daily RH2M
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
-condition: 일평균 상대습도 < 40%
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
+condition: Daily mean relative humidity < 40%
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [건조, 낮은 습도, 메마른, 일소, 수분 스트레스]
+keywords: [dry air, low humidity, arid, sunburn, water stress, shading]
 ---
 
-## 정의
-생육기 동안 하루 평균 상대습도가 40% 미만이었던 날의 수입니다.
+## Definition
+The number of growing-season days when daily mean relative humidity was below 40%.
 
-## 왜 중요한가
-공기가 메마르면 잎과 포도알에서 물이 빨리 빠져 알이 작아지고 일소 피해가 커집니다. 다만 병은 줄어듭니다. 관수·차광 판단에 씁니다.
+## Why it matters
+In very dry air, leaves and berries lose water quickly, so berries stay small and sunburn damage increases. On the other hand, disease decreases. It is used for irrigation and shading decisions.
 
-## 해석 가이드
-- 기울기가 양수면 메마른 날이 늘어나는 쪽입니다.
+## How to read
+- A positive slope means dry days are becoming more common.
 
-## 주의점
-- 하루 평균값으로 계산한 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- An approximation based on daily mean values.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

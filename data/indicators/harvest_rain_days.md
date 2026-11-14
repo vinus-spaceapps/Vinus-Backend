@@ -1,40 +1,40 @@
 ---
 id: harvest_rain_days
-name: 수확기 호우일수
+name: Heavy rain days at harvest
 category: rain_water
 order: 20
-short: 수확기(8~9월, 남반구 2~3월) 하루 강수량이 기준값 이상이었던 날 수
-unit: 일
+short: Number of harvest-period days (Aug–Sep; Southern Hemisphere Feb–Mar) with daily rain at or above the threshold
+unit: days
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR (MERRA-2 관측 보정 강수)
+source: NASA POWER daily PRECTOTCORR (MERRA-2 observation-corrected precipitation)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 수확기 (8~9월, 남반구 2~3월)
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Harvest period (Aug–Sep; Southern Hemisphere Feb–Mar)
 stage_from: veraison
 stage_to: harvest
-condition: 일 강수량 ≥ 기준값
+condition: Daily precipitation ≥ threshold
 threshold: 20
 threshold_unit: mm
 threshold_options: [10, 20, 30]
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [비, 강수, 호우, 장마, 습해, 곰팡이, 잿빛곰팡이, 열과, 터짐, 수확기 비, 태풍, rain]
+keywords: [rain, harvest rain, heavy rain, rot, gray mold, botrytis, berry splitting, typhoon, rain cover]
 ---
 
-## 정의
-수확기(북반구 8~9월, 남반구 2~3월) 동안 하루 강수량이 기준값(기본 20mm) 이상이었던 날의 수입니다. 10mm·30mm로 바꿔 볼 수 있습니다.
+## Definition
+The number of days during harvest (August–September in the Northern Hemisphere, February–March in the Southern Hemisphere) with daily rain at or above the threshold (default 20 mm). You can switch it to 10 mm or 30 mm.
 
-## 왜 중요한가
-수확 직전의 큰비는 포도알을 터지게 하고(열과) 잿빛곰팡이병을 퍼뜨려, 당도가 다 오르기 전에 서둘러 따게 만듭니다. 수확 계획, 비가림 시설 투자, 조생 품종 검토에 씁니다.
+## Why it matters
+Heavy rain just before harvest makes berries burst (berry splitting) and spreads gray mold (botrytis), forcing growers to pick early before sugar has fully built up. It is used for harvest planning, investment in rain covers, and considering early-ripening varieties.
 
-## 해석 가이드
-- 기울기가 양수면 수확기에 큰비가 잦아지는 쪽입니다.
-- 0~10일 범위의 작은 정수라 해마다 크게 출렁입니다. 비가 적은 산지(나파·오카나간)는 거의 늘 0입니다. 수확기 강수량을 함께 보세요.
+## How to read
+- A positive slope means heavy rain at harvest is becoming more frequent.
+- It is a small whole number between 0 and 10, so it swings a lot from year to year. In dry regions (Napa, Okanagan) it is almost always 0. Look at harvest rainfall as well.
 
-## 주의점
-- MERRA-2 강수는 모델에 관측을 보정한 값이라 국지성 호우를 작게 잡을 수 있습니다. GPM IMERG(약 10km)로 교차 확인할 계획입니다.
+## Caveats
+- MERRA-2 precipitation is model output corrected with observations, so it can underestimate localized downpours. We plan to cross-check with GPM IMERG (~10 km).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) 2_와인지표_데이터, 7_연도별지표
+## References
+- Team data workbook: sheets "2_Wine indicator data" and "7_Indicators by year"
 - NASA POWER — https://power.larc.nasa.gov/

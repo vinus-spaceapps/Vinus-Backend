@@ -1,38 +1,38 @@
 ---
 id: harvest_dew_days
-name: 수확기 이슬 맺힘 일수
+name: Harvest-period dew days
 category: disease
 order: 80
-short: 수확기(8~9월) 동안 밤 기온이 이슬점 가까이 내려가 송이에 이슬이 맺히기 쉬운 날 수
-unit: "일"
+short: Number of days during harvest (Aug–Sep) when night temperatures drop close to the dew point, so dew easily forms on the bunches
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M·RH2M·T2M_MIN
+source: NASA POWER daily T2M, RH2M, T2M_MIN
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 수확기 (8~9월, 남반구 2~3월)
-condition: 일 최저기온 ≤ 이슬점 + 1°C (이슬점은 평균기온·습도로 계산)
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Harvest period (Aug–Sep; Southern Hemisphere Feb–Mar)
+condition: Daily minimum temperature ≤ dew point + 1°C (dew point calculated from mean temperature and humidity)
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [이슬, 밤 이슬, 젖음, 곰팡이, 통풍]
+keywords: [dew, night dew, leaf wetness, wet bunches, mildew, rot, airflow, leaf removal]
 ---
 
-## 정의
-수확기 동안 하루 최저기온이 그날의 이슬점(평균기온·습도로 계산) + 1°C 이하로 내려간 날의 수입니다.
+## Definition
+The number of days during the harvest period when the daily minimum temperature fell to or below that day's dew point (calculated from mean temperature and humidity) plus 1°C.
 
-## 왜 중요한가
-비가 오지 않아도 밤새 맺힌 이슬로 송이가 젖으면 곰팡이가 번집니다. 송이 주변 잎 따기(통풍)와 방제 판단에 씁니다.
+## Why it matters
+Even without rain, bunches wet from dew that forms overnight let fungi spread. Used to decide on removing leaves around the bunches (for airflow) and on spraying.
 
-## 해석 가이드
-- 기울기가 양수면 이슬 맺히는 밤이 늘어나는 쪽입니다.
+## How to read
+- A positive slope (upward trend) means more nights with dew.
 
-## 주의점
-- 하루 평균값으로 계산한 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- An approximation based on daily mean values.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

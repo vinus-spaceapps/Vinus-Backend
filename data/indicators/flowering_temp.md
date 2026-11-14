@@ -1,16 +1,16 @@
 ---
 id: flowering_temp
-name: 개화기 평균기온
+name: Flowering-period mean temperature
 category: growth
 order: 80
-short: 꽃이 피는 달(6월, 남반구 12월)의 하루 평균기온. 열매가 잘 맺히는지(착과)에 영향
+short: Daily mean temperature in the flowering month (June; Southern Hemisphere December), which affects how well berries set (fruit set)
 unit: °C
 dataset: MERRA-2
-source: NASA POWER 일별 T2M (MERRA-2 2m 평균기온)
+source: NASA POWER daily T2M (MERRA-2 2 m mean temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 개화기 (6월, 남반구 12월)
-condition: (조건 없음) 기간 평균
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Flowering (June; Southern Hemisphere December)
+condition: (no condition) period mean
 threshold:
 threshold_unit:
 threshold_options: []
@@ -18,22 +18,22 @@ aggregation: mean
 robust: false
 higher_is: neutral
 station_var: tmean
-keywords: [개화, 꽃, 착과, 꽃떨이, 결실, 송이, 수확량]
+keywords: [flowering, bloom, fruit set, coulure, poor fruit set, bunches, yield]
 ---
 
-## 정의
-포도꽃이 피는 달(북반구 6월, 남반구 12월)의 하루 평균기온을 평균한 값입니다.
+## Definition
+The average of the daily mean temperature in the month when grapevines flower (June in the Northern Hemisphere, December in the Southern Hemisphere).
 
-## 왜 중요한가
-꽃이 필 때 너무 춥거나(대략 15°C 아래) 너무 더우면 꽃가루받이가 잘 안 돼 열매가 덜 맺힙니다(꽃떨이). 그해 수확량을 가늠하고, 착과가 불안정한 품종을 피하는 데 씁니다.
+## Why it matters
+If it is too cold (roughly below 15°C) or too hot at bloom, pollination fails and fewer berries set (poor fruit set, or coulure). Used to gauge that year's yield and to avoid varieties with unreliable fruit set.
 
-## 해석 가이드
-- 대략 20~25°C가 착과에 좋습니다. 이 범위에서 멀어지는지 보세요.
+## How to read
+- Roughly 20–25°C is good for fruit set. Watch whether values are drifting away from this range.
 
-## 주의점
-- 실제 개화 시기는 해마다·품종마다 달라 한 달 고정 기간은 근사입니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Actual flowering dates vary by year and by variety, so a fixed one-month window is an approximation.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/

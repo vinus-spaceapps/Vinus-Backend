@@ -1,40 +1,40 @@
 ---
 id: humid_days
-name: 생육기 고습일수
+name: Growing-season humid days
 category: disease
 order: 40
-short: 생육기 동안 습도 80% 이상이면서 기온 15~25°C인, 곰팡이병이 번지기 좋은 날 수
-unit: 일
+short: Number of days in the growing season with humidity of 80% or more and temperatures of 15–25°C, when fungal diseases spread easily
+unit: days
 dataset: MERRA-2
-source: NASA POWER 일별 RH2M·T2M (MERRA-2 2m 상대습도·평균기온)
+source: NASA POWER daily RH2M, T2M (MERRA-2 2 m relative humidity and mean temperature)
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 생육기 (4/1~10/31, 남반구 10/1~4/30)
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Growing season (Apr 1–Oct 31; Southern Hemisphere Oct 1–Apr 30)
 stage_from: budburst
 stage_to: harvest
-condition: 일평균 상대습도 ≥ 80% 그리고 15°C ≤ 일평균기온 ≤ 25°C
+condition: Daily mean relative humidity ≥ 80% and 15°C ≤ daily mean temperature ≤ 25°C
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [습도, 곰팡이, 노균병, 흰가루병, 병해, 방제, 농약, 축축, 습해, disease, humidity]
+keywords: [humidity, mildew, downy mildew, powdery mildew, disease, spraying, fungicide, damp, fungus, disease pressure]
 ---
 
-## 정의
-생육기 동안 하루 평균 상대습도가 80% 이상이고 하루 평균기온이 15~25°C였던 날의 수입니다. 노균병·흰가루병 같은 곰팡이병이 번지기 좋은 조건입니다.
+## Definition
+The number of days in the growing season when the daily mean relative humidity was 80% or higher and the daily mean temperature was 15–25°C. These conditions favor fungal diseases such as downy mildew and powdery mildew.
 
-## 왜 중요한가
-곰팡이병은 방제 비용과 수확량 손실의 가장 큰 원인 중 하나입니다. 방제 횟수 계획, 내병성 품종 검토, 유기농 전환 판단에 씁니다.
+## Why it matters
+Fungal diseases are among the biggest drivers of spray costs and yield loss. Used to plan the number of sprays, consider disease-resistant varieties, and decide on converting to organic.
 
-## 해석 가이드
-- 기울기가 양수면 병이 번지기 좋은 날이 늘어나는 쪽입니다.
-- 건조한 산지(나파·바로사)는 거의 0입니다. 습한 산지(영동·보르도)에서 의미가 큽니다.
+## How to read
+- A positive slope (upward trend) means more days that favor disease.
+- Dry regions (Napa, Barossa) sit close to 0. The indicator matters most in humid regions (Yeongdong, Bordeaux).
 
-## 주의점
-- 일평균 습도 기준이라 밤 이슬이나 시간대별 습도는 반영되지 않습니다. 실제 병 발생 모델보다 단순합니다.
+## Caveats
+- Based on daily mean humidity, so nighttime dew and hour-by-hour humidity are not captured. It is simpler than real disease-forecasting models.
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) 2_와인지표_데이터, 7_연도별지표
+## References
+- Team data workbook: sheets 2 (wine indicator data) and 7 (indicators by year)
 - NASA POWER — https://power.larc.nasa.gov/

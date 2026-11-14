@@ -1,16 +1,16 @@
 ---
 id: harvest_hot_days
-name: 수확기 고온일수
+name: Hot days at harvest
 category: heat
 order: 70
-short: 수확기(8~9월) 동안 최고기온이 기준값(기본 30°C) 이상인 날 수
-unit: "일"
+short: Number of days in the harvest period (Aug–Sep) with a maximum temperature at or above the threshold (default 30°C)
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 T2M_MAX
+source: NASA POWER daily T2M_MAX
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 수확기 (8~9월, 남반구 2~3월)
-condition: 일 최고기온 ≥ 기준값
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Harvest period (Aug–Sep; Southern Hemisphere Feb–Mar)
+condition: daily maximum temperature ≥ threshold
 threshold: 30
 threshold_unit: °C
 threshold_options: [30, 32, 35]
@@ -18,22 +18,22 @@ aggregation: count
 robust: false
 higher_is: worse
 station_var: tmax
-keywords: [수확기 더위, 숙성기 고온, 산도, 향, 알코올]
+keywords: [harvest heat, ripening heat, hot days at ripening, acidity, aroma, alcohol, sugar]
 ---
 
-## 정의
-수확기 동안 하루 최고기온이 기준값(기본 30°C) 이상이었던 날의 수입니다. 32·35°C로 바꿔 볼 수 있습니다.
+## Definition
+The number of days during the harvest period with a daily maximum temperature at or above the threshold (default 30°C). You can switch to 32 or 35°C.
 
-## 왜 중요한가
-익는 시기의 더위는 산도와 향을 빠르게 빼앗고 당만 올려, 알코올이 높고 밋밋한 와인이 됩니다. 수확 시기를 앞당길지, 그늘을 늘릴지 판단할 때 씁니다.
+## Why it matters
+Heat during ripening quickly strips away acidity and aroma while pushing up only the sugar, which gives high-alcohol, flat-tasting wines. Used when deciding whether to bring the harvest forward or add more shade.
 
-## 해석 가이드
-- 기울기가 양수면 익는 시기에 더운 날이 늘어나는 쪽입니다.
+## How to read
+- A positive slope means more hot days during ripening.
 
-## 주의점
-- 50km 격자 평균이라 고도·경사면 차이는 반영되지 않습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- As a 50 km grid average, it does not reflect differences in elevation or slope.
+- Calculated directly from the team's daily raw data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: calculated from the D_ daily raw data sheets
 - NASA POWER — https://power.larc.nasa.gov/

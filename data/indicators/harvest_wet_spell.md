@@ -1,38 +1,38 @@
 ---
 id: harvest_wet_spell
-name: 수확기 최장 연속 강우일
+name: Longest wet spell at harvest
 category: rain_water
 order: 50
-short: 수확기(8~9월) 동안 비 오는 날이 가장 길게 이어진 일수
-unit: "일"
+short: Longest run of consecutive rainy days during the harvest period (Aug–Sep)
+unit: "days"
 dataset: MERRA-2
-source: NASA POWER 일별 PRECTOTCORR
+source: NASA POWER daily PRECTOTCORR
 start_year: 2001
-resolution: 약 50km (MERRA-2 격자 한 칸)
-stage: 수확기 (8~9월, 남반구 2~3월)
-condition: 일 강수량 ≥ 1mm 인 날이 가장 길게 이어진 기간
+resolution: ~50 km (one MERRA-2 grid cell)
+stage: Harvest period (Aug–Sep; Southern Hemisphere Feb–Mar)
+condition: Longest run of consecutive days with daily precipitation ≥ 1 mm
 threshold:
 threshold_unit:
 threshold_options: []
 aggregation: count
 robust: false
 higher_is: worse
-keywords: [장마, 연속 강우, 가을장마, 수확 지연, 부패]
+keywords: [wet spell, consecutive rain, rainy season, autumn rains, harvest delay, rot]
 ---
 
-## 정의
-수확기 동안 하루 강수량 1mm 이상인 날이 가장 길게 연속된 날 수입니다.
+## Definition
+The longest run of consecutive harvest-period days with 1 mm or more of daily rain.
 
-## 왜 중요한가
-비가 며칠씩 이어지면 포도가 마를 틈이 없어 부패가 급격히 번지고 수확을 미룰 수밖에 없습니다. 수확 일정의 여유와 방제 판단에 씁니다.
+## Why it matters
+When rain continues for days, grapes never get a chance to dry, rot spreads rapidly and harvest has to be postponed. It is used to judge how much slack the harvest schedule needs and when to spray.
 
-## 해석 가이드
-- 기울기가 양수면 수확기 장마가 길어지는 쪽입니다.
+## How to read
+- A positive slope means rainy spells at harvest are getting longer.
 
-## 주의점
-- 모델 강수는 약한 비를 실제보다 자주 내리는 경향이 있습니다.
-- 팀 일별 원자료로 직접 계산한 지표입니다(scripts/import_team_xlsx.py 의 DERIVED).
+## Caveats
+- Model precipitation tends to produce light rain more often than actually occurs.
+- Computed directly by the team from the raw daily data (DERIVED in scripts/import_team_xlsx.py).
 
-## 근거
-- 팀 데이터 정리(NASA_와인_데이터정리.xlsx) D_ 일별 원자료에서 계산
+## References
+- Team data workbook: computed from the D_ daily raw data
 - NASA POWER — https://power.larc.nasa.gov/
