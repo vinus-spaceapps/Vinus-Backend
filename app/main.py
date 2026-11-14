@@ -12,6 +12,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 load_dotenv()
 
@@ -24,6 +25,8 @@ logging.basicConfig(level=logging.INFO)
 app = FastAPI(title="Vinus API", version="0.1.0", description="와인 기후 추세 탐정 — NASA Space Apps 2026")
 
 origins = [o.strip() for o in os.getenv("VINUS_CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",") if o.strip()]
+# 지표 목록이 커서(약 1MB) 압축해서 보냅니다.
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -41,6 +44,7 @@ def health() -> dict:
 def variables() -> dict:
     return {
         "categories": catalog.CATEGORIES,
+        "families": catalog.FAMILIES,
         "variables": [catalog.public_indicator(m) for m in catalog.indicators().values()],
     }
 

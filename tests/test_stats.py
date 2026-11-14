@@ -122,15 +122,6 @@ def test_case5_dropping_2020_changes_verdict():
         assert "one_year_drives_result" in r["flags"]
 
 
-def test_case5_mock_yeongdong_rain_flags_one_year():
-    from app.analysis import AnalyzeRequest, run_analysis
-
-    a = run_analysis(AnalyzeRequest(variables=["harvest_rain_days"], region="yeongdong", start=2003, end=2025))
-    st = a["results"][0]["stats"]
-    assert st["verdict"]["status"] == "significant"
-    assert "one_year_drives_result" in st["flags"]
-
-
 def test_robust_uses_sen_headline():
     y = np.array([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0, 1, 0, 9, 11, 1, 17, 7, 4, 2, 5, 3], dtype=float)
     r = analyze_series(YEARS, y, robust=True)

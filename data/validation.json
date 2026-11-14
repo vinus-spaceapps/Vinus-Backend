@@ -1,0 +1,120 @@
+{
+  "napa": {
+    "station": {
+      "id": "USC00046074",
+      "days": 9150,
+      "tmin_bias": -0.1,
+      "tmin_corr": 0.861,
+      "tmax_bias": -0.63,
+      "tmax_corr": 0.907
+    },
+    "modis": {
+      "periods": 167,
+      "lst_minus_grid_tmin": 0.38,
+      "pixel_spread_mean": 3.49,
+      "pixel_spread_max": 9.7,
+      "cold_pixel_periods": 0,
+      "grid_cold_periods": 0
+    }
+  },
+  "mosel": {
+    "station": {
+      "id": "GME00121222",
+      "days": 9404,
+      "tmin_bias": -0.7,
+      "tmin_corr": 0.979,
+      "tmax_bias": 0.58,
+      "tmax_corr": 0.984
+    },
+    "modis": {
+      "periods": 163,
+      "lst_minus_grid_tmin": 0.29,
+      "pixel_spread_mean": 4.83,
+      "pixel_spread_max": 20.3,
+      "cold_pixel_periods": 31,
+      "grid_cold_periods": 7
+    }
+  },
+  "barossa": {
+    "station": {
+      "id": "ASN00023373",
+      "days": 9317,
+      "tmin_bias": 1.36,
+      "tmin_corr": 0.87,
+      "tmax_bias": 1.95,
+      "tmax_corr": 0.981
+    },
+    "modis": {
+      "periods": 214,
+      "lst_minus_grid_tmin": -1.6,
+      "pixel_spread_mean": 4.07,
+      "pixel_spread_max": 10.6,
+      "cold_pixel_periods": 0,
+      "grid_cold_periods": 0
+    }
+  },
+  "bordeaux": {
+    "station": {
+      "id": "FR000007510",
+      "days": 9404,
+      "tmin_bias": -1.39,
+      "tmin_corr": 0.963,
+      "tmax_bias": -0.24,
+      "tmax_corr": 0.978
+    },
+    "modis": {
+      "periods": 163,
+      "lst_minus_grid_tmin": -0.98,
+      "pixel_spread_mean": 3.54,
+      "pixel_spread_max": 17.3,
+      "cold_pixel_periods": 2,
+      "grid_cold_periods": 0
+    }
+  },
+  "burgundy": {
+    "station": {
+      "id": "FRE00104072",
+      "days": 9404,
+      "tmin_bias": -0.74,
+      "tmin_corr": 0.953,
+      "tmax_bias": -0.85,
+      "tmax_corr": 0.982
+    },
+    "modis": {
+      "periods": 158,
+      "lst_minus_grid_tmin": -0.45,
+      "pixel_spread_mean": 3.98,
+      "pixel_spread_max": 13.4,
+      "cold_pixel_periods": 15,
+      "grid_cold_periods": 1
+    }
+  },
+  "okanagan": {
+    "station": {
+      "id": "CAN01125766",
+      "days": 6576,
+      "tmin_bias": -5.26,
+      "tmin_corr": 0.907,
+      "tmax_bias": -5.03,
+      "tmax_corr": 0.977
+    },
+    "modis": {
+      "periods": 165,
+      "lst_minus_grid_tmin": 2.36,
+      "pixel_spread_mean": 5.75,
+      "pixel_spread_max": 15.5,
+      "cold_pixel_periods": 73,
+      "grid_cold_periods": 59
+    }
+  },
+  "yeongdong": {
+    "modis": {
+      "periods": 165,
+      "lst_minus_grid_tmin": 0.21,
+      "pixel_spread_mean": 3.06,
+      "pixel_spread_max": 8.6,
+      "cold_pixel_periods": 7,
+      "grid_cold_periods": 1
+    }
+  }
+}

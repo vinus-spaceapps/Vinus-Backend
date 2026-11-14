@@ -4,6 +4,7 @@
 id: example_indicator            # 영문 소문자·밑줄. 프론트·AI·CSV 경로가 모두 이 값을 씁니다.
 name: 예시 지표                   # 카드 제목 (생산자 말로)
 category: temp_frost             # temp_frost(기온·서리) | rain_water(비·물) | smoke_air(연기·대기) | growth(생육)
+order: 99                         # 카드 표시 순서 (작을수록 앞, 카테고리별 10·20·30·40번대)
 short: 한 줄 정의                 # hover 첫 줄, 변수 담기 AI 가 읽는 정의
 unit: 일                          # 그래프 축 단위
 dataset: MERRA-2                  # MERRA-2 | GPM IMERG | GLDAS | AIRS | OMI | MODIS
