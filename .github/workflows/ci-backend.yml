@@ -43,7 +43,7 @@ jobs:
       - name: Test
         run: |
           set +e
-          pytest -q
+          python -m pytest -q   # python -m 으로 실행해야 레포 루트가 import 경로에 들어가 app 패키지를 찾습니다.
           code=$?
           if [ $code -eq 5 ]; then echo "테스트 없음, 통과 처리"; exit 0; fi
           exit $code
