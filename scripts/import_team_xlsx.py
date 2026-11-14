@@ -76,7 +76,7 @@ def write_series(store: dict) -> int:
         path = series_path(var_id, region_id, thr)
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f)
+            w = csv.writer(f, lineterminator="\n")
             w.writerow(["year", "value"])
             for year in sorted(points):
                 v = points[year]
@@ -818,7 +818,7 @@ def main(xlsx: str) -> None:
     ids = [m["id"] for m in metas]
     for rid, table in values.items():
         with (out_dir / f"{rid}.csv").open("w", newline="", encoding="utf-8") as f:
-            w = csv.writer(f)
+            w = csv.writer(f, lineterminator="\n")
             w.writerow(["year"] + ids)
             for y in range(2001, 2027):
                 row = [table.get(i, {}).get(y, "") for i in ids]
@@ -858,7 +858,7 @@ def main(xlsx: str) -> None:
     fixture = ROOT / "tests" / "fixtures" / "team_trend_results.csv"
     fixture.parent.mkdir(parents=True, exist_ok=True)
     with fixture.open("w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(["region", "variable", "threshold", "start", "end", "n", "sen_per_decade", "mk_p", "ols_per_decade", "ols_ci_low", "ols_ci_high", "t_p"])
         for r in rows:
             var_id, thr = COLUMN_MAP[r[1]]
