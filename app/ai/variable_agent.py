@@ -31,6 +31,11 @@ class VariableChatRequest(BaseModel):
     basket: List[str] = Field(default_factory=list)
 
 
+def _core() -> list:
+    """AI 에게는 사람이 쓴 핵심 지표만 보여 줍니다 (자동 생성 지표 수백 개는 프롬프트에 넣지 않음)."""
+    return [m for m in catalog.indicators().values() if m.get("family", "core") == "core"]
+
+
 def _catalog_for_prompt() -> list:
     return [
         {
@@ -44,7 +49,7 @@ def _catalog_for_prompt() -> list:
             "why": m["sections"].get("why", ""),
             "keywords": m["keywords"],
         }
-        for m in catalog.indicators().values()
+        for m in _core()
     ]
 
 
@@ -67,7 +72,7 @@ def _system_prompt() -> str:
 
 
 def _schema() -> dict:
-    ids = list(catalog.indicators().keys())
+    ids = [m["id"] for m in _core()]
     return {
         "type": "object",
         "properties": {
@@ -89,7 +94,11 @@ def _schema() -> dict:
 
 def _basket_line(basket: List[str]) -> str:
     names = [f"{catalog.indicator(b)['name']}({b})" for b in basket if catalog.indicator(b)]
-    return "(현재 분석 바구니: " + (", ".join(names) if names else "비어 있음") + f", 최대 {BASKET_LIMIT}개)"
+    room = max(0, BASKET_LIMIT - len(basket))
+    line = "(현재 분석 바구니: " + (", ".join(names) if names else "비어 있음") + f" / 최대 {BASKET_LIMIT}개, 남은 자리 {room}개)"
+    if room == 0:
+        line += "\n(바구니가 가득 찼다. add 는 빈 배열로 두고, 무엇을 빼면 좋을지 제안만 한다.)"
+    return line
 
 
 def _sanitize(out: dict, basket: List[str]) -> dict:
@@ -125,7 +134,8 @@ def _score(meta: dict, text: str) -> int:
 
 def fallback_reply(req: VariableChatRequest) -> dict:
     text = req.messages[-1].content
-    scored = sorted(((_score(m, text), m) for m in catalog.indicators().values()), key=lambda x: -x[0])
+    # 핵심 지표를 먼저 추천 (자동 생성 지표는 같은 점수면 뒤로)
+    scored = sorted(((_score(m, text) + (3 if m.get("family", "core") == "core" else 0) * (_score(m, text) > 0), m) for m in catalog.indicators().values()), key=lambda x: -x[0])
     hits = [m for s, m in scored if s > 0]
 
     if hits and QUESTION_PAT.search(text):
@@ -162,6 +172,11 @@ def reply(req: VariableChatRequest) -> dict:
     try:
         out = llm.structured_call(_system_prompt(), history, _schema(), effort="low")
         result = _sanitize(out, req.basket)
+        wanted = [a.get("id") for a in out.get("add", []) if a.get("id") not in req.basket]
+        if wanted and not result["add"]:
+            # 모델이 담겠다고 했지만 자리가 없어 실제로는 못 담은 경우 — 답변과 화면이 어긋나지 않게 밝힘
+            names = ", ".join(catalog.indicator(v)["name"] for v in wanted if catalog.indicator(v))
+            result["reply"] += f"\n\n※ 바구니가 가득 차서({BASKET_LIMIT}개) {names}은(는) 담지 못했어요. 하나를 빼고 다시 말씀해 주세요."
         result["source"] = "llm"
         return result
     except llm.LLMUnavailable as e:

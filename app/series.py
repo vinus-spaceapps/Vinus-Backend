@@ -1,9 +1,12 @@
 """연도별 시계열 공급.
 
-1) data/series/<변수id>/<산지id>.csv 가 있으면 그 값을 씁니다 (팀이 Giovanni·스크립트로 집계한 실제 NASA 값).
-2) 없으면 결정론적 예시 데이터(목업)를 만듭니다. 화면에 '예시 데이터' 배지가 붙습니다.
+1) data/series/<변수id>/<산지id>.csv 가 있으면 그 값을 씁니다 (팀이 NASA 자료로 집계한 실제 값).
+   기준값이 기본과 다르면 <산지id>__t<기준값>.csv 를 찾습니다 (예: frost_after_budburst/burgundy__t-2.csv).
+2) 실제 값이 아예 없는 지표(지금은 연기 지표 2개)만 결정론적 예시 데이터(목업)를 만들고,
+   화면에 '예시 데이터' 배지가 붙습니다.
 
 CSV 형식:  year,value   (헤더 한 줄, 시즌은 수확 연도 기준)
+팀 엑셀에서 다시 만들 때: scripts/import_team_xlsx.py
 """
 
 from __future__ import annotations
@@ -12,102 +15,49 @@ import csv
 import math
 import zlib
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
 
 from .catalog import DATA_DIR, DATA_END_YEAR
+from .catalog import has_real_data as catalog_has_real_data
 
 SERIES_DIR = DATA_DIR / "series"
 FIRST_YEAR = 1981
 
-# (기본값, 10년당 변화, 잡음 표준편차, {연도: 더할 값})
-# 목업이 시연 시나리오와 테스트 케이스(유의한 증가/감소, 유의하지 않음, 검정 엇갈림,
-# 한 해가 결과를 좌우)를 모두 보여 주도록 값을 골랐습니다. 실제 관측이 아닙니다.
-Profile = tuple
 
+class SeriesUnavailable(LookupError):
+    pass
+
+
+# 실제 집계가 아직 없는 지표의 예시 데이터 설정: (기본값, 10년당 변화, 잡음 표준편차, {연도: 더할 값})
+# 실제 관측이 아닙니다. 산불이 컸던 해(2017·2018·2020·2021·2023)를 대략 반영해 시연이 되도록만 골랐습니다.
 PROFILES: dict = {
     "harvest_smoke_days": {
-        "rogue_valley": (1.5, 2.5, 1.2, {2015: 3, 2017: 9, 2018: 11, 2020: 17, 2021: 7, 2022: 4, 2024: 5}),
-        "napa": (2.0, 0.0, 1.0, {2008: 2, 2017: 6, 2020: 22}),
-        "sonoma": (2.0, 0.2, 1.0, {2017: 7, 2019: 3, 2020: 20}),
-        "burgundy": (0.4, 0.0, 0.5, {2003: 2, 2019: 1, 2022: 2}),
+        "napa": (1.5, 2.0, 1.2, {2015: 3, 2017: 8, 2018: 6, 2020: 18, 2021: 5, 2024: 4}),
+        "okanagan": (1.0, 1.8, 1.0, {2015: 3, 2017: 7, 2018: 8, 2021: 9, 2023: 10}),
+        "bordeaux": (0.4, 0.0, 0.5, {2022: 3}),
+        "burgundy": (0.4, 0.0, 0.5, {2003: 2, 2022: 2}),
         "mosel": (0.3, 0.0, 0.4, {2022: 1}),
         "barossa": (1.0, 0.3, 0.8, {2007: 3, 2015: 2, 2020: 9}),
         "yeongdong": (0.8, 0.1, 0.6, {2019: 2}),
     },
     "harvest_aerosol_days": {
-        "rogue_valley": (2.0, 2.0, 1.2, {2017: 7, 2018: 9, 2020: 14, 2021: 6}),
-        "napa": (2.5, 0.2, 1.1, {2017: 5, 2020: 16}),
-        "sonoma": (2.5, 0.2, 1.1, {2017: 6, 2020: 15}),
+        "napa": (2.0, 1.6, 1.2, {2017: 6, 2018: 5, 2020: 15, 2021: 5}),
+        "okanagan": (1.5, 1.5, 1.0, {2017: 6, 2018: 7, 2021: 8, 2023: 9}),
+        "bordeaux": (1.0, 0.0, 0.7, {2022: 3}),
         "burgundy": (1.0, 0.0, 0.7, {2022: 2}),
         "mosel": (0.8, 0.0, 0.6, {}),
         "barossa": (1.5, 0.2, 0.9, {2020: 8}),
         "yeongdong": (3.0, -0.3, 1.2, {2015: 3, 2016: 2}),
     },
-    "frost_after_budburst": {
-        "rogue_valley": (5.0, -0.9, 1.6, {2008: 3}),
-        "napa": (2.0, -0.4, 1.2, {2008: 3}),
-        "sonoma": (2.5, -0.5, 1.2, {2008: 3}),
-        "burgundy": (4.0, -0.3, 1.8, {2016: 4, 2017: 5, 2021: 7}),
-        "mosel": (6.5, -1.8, 1.2, {2017: 3}),
-        "barossa": (3.0, 0.1, 1.2, {2025: 7}),
-        "yeongdong": (3.0, -0.8, 1.3, {2010: 3, 2013: 2}),
-    },
-    "heat_days": {
-        "rogue_valley": (9.0, 2.5, 3.0, {2021: 8}),
-        "napa": (8.0, 2.0, 3.0, {2022: 6}),
-        "sonoma": (4.0, 1.3, 2.0, {2022: 5}),
-        "burgundy": (2.0, 1.4, 1.5, {2003: 9, 2019: 4, 2022: 5}),
-        "mosel": (0.6, 0.6, 0.8, {2003: 4, 2019: 2}),
-        "barossa": (12.0, 3.0, 3.5, {2009: 7, 2019: 8}),
-        "yeongdong": (3.0, 1.5, 2.0, {2018: 9}),
-    },
-    "harvest_rain_days": {
-        "rogue_valley": (0.8, 0.0, 0.7, {}),
-        "napa": (0.3, 0.0, 0.4, {}),
-        "sonoma": (0.4, 0.0, 0.4, {}),
-        "burgundy": (2.0, 0.1, 1.0, {}),
-        "mosel": (3.0, 0.2, 1.2, {}),
-        "barossa": (0.8, -0.1, 0.6, {}),
-        "yeongdong": (3.0, 0.45, 0.6, {2020: 3, 2022: 3, 2023: 4}),
-    },
-    "gs_soil_moisture": {
-        "rogue_valley": (22.0, -0.6, 1.0, {}),
-        "napa": (18.0, -0.9, 1.2, {2021: -3}),
-        "sonoma": (20.0, -0.7, 1.2, {2021: -3}),
-        "burgundy": (26.0, -0.5, 1.4, {2022: -3}),
-        "mosel": (28.0, -0.3, 1.3, {}),
-        "barossa": (15.0, -0.4, 1.3, {}),
-        "yeongdong": (31.0, 0.1, 1.5, {}),
-    },
-    "gdd_growing_season": {
-        "rogue_valley": (1500, 55, 55, {}),
-        "napa": (1800, 45, 60, {}),
-        "sonoma": (1600, 40, 55, {}),
-        "burgundy": (1250, 70, 65, {2003: 160}),
-        "mosel": (1050, 65, 55, {2018: 120}),
-        "barossa": (1900, 40, 70, {}),
-        "yeongdong": (1700, 50, 60, {}),
-    },
-    "ripening_night_lst": {
-        "rogue_valley": (8.0, 0.35, 0.6, {}),
-        "napa": (11.0, 0.4, 0.6, {}),
-        "sonoma": (10.0, 0.35, 0.6, {}),
-        "burgundy": (9.0, 0.45, 0.7, {2003: 1.5}),
-        "mosel": (7.5, 0.4, 0.6, {}),
-        "barossa": (12.0, 0.3, 0.7, {}),
-        "yeongdong": (17.0, 0.4, 0.7, {}),
-    },
 }
 
-# 기준값을 엄격하게 바꿀수록 날수가 줄어드는 정도 (목업 전용 근사)
+# 예시 데이터에서 기준값을 엄격하게 바꿀수록 날수가 줄어드는 정도 (목업 전용 근사)
 THRESHOLD_EFFECT = {
-    # 변수: (기준값이 '커질수록' 엄격해지면 +1, '작아질수록' 엄격해지면 -1, 단위당 감소율)
-    "frost_after_budburst": (-1, 0.45),
-    "heat_days": (+1, 0.25),
-    "harvest_rain_days": (+1, 0.07),
+    # 변수: (기준값이 '커질수록' 엄격해지면 +1, 단위당 감소율)
     "harvest_smoke_days": (+1, 1.6),
     "harvest_aerosol_days": (+1, 1.2),
 }
@@ -137,21 +87,50 @@ def _read_csv(path: Path) -> dict:
     return out
 
 
+def _thr_name(threshold) -> str:
+    return f"{float(threshold):g}"
+
+
 def real_series_path(var_id: str, region_id: str, threshold=None, default_threshold=None) -> Optional[Path]:
     base = SERIES_DIR / var_id
     if threshold is not None and default_threshold is not None and float(threshold) != float(default_threshold):
-        p = base / f"{region_id}__t{threshold}.csv"
+        p = base / f"{region_id}__t{_thr_name(threshold)}.csv"
         return p if p.exists() else None
     p = base / f"{region_id}.csv"
     return p if p.exists() else None
 
 
+has_real_data = catalog_has_real_data
+
+GENERATED_DIR = DATA_DIR / "series_generated"
+
+
+@lru_cache(maxsize=16)
+def _wide(region_id: str, mtime: int) -> dict:
+    """data/series_generated/<산지>.csv (year + 지표 열 수백 개) → {지표id: {연도: 값}}"""
+    out: dict = {}
+    with (GENERATED_DIR / f"{region_id}.csv").open(encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            y = int(row.pop("year"))
+            for k, v in row.items():
+                if v != "":
+                    out.setdefault(k, {})[y] = float(v)
+    return out
+
+
+def generated_values(var_id: str, region_id: str) -> Optional[dict]:
+    p = GENERATED_DIR / f"{region_id}.csv"
+    if not p.exists():
+        return None
+    return _wide(region_id, p.stat().st_mtime_ns).get(var_id)
+
+
 def mock_values(var_id: str, region_id: str, aggregation: str, threshold=None, default_threshold=None) -> dict:
-    """1981~2025 전체 연도의 예시 값. 같은 입력이면 항상 같은 값."""
+    """1981~마지막 연도의 예시 값. 같은 입력이면 항상 같은 값."""
     prof = PROFILES.get(var_id, {}).get(region_id)
     if prof is None:
         rng0 = np.random.RandomState(_seed("default", var_id, region_id))
-        prof = (float(rng0.uniform(2, 8)), float(rng0.uniform(-1, 1)), 1.5, {})
+        prof = (float(rng0.uniform(1, 4)), float(rng0.uniform(-0.5, 0.5)), 1.0, {})
     base, trend_dec, sd, spikes = prof
     rng = np.random.RandomState(_seed(var_id, region_id))
     years = np.arange(FIRST_YEAR, DATA_END_YEAR + 1)
@@ -186,17 +165,32 @@ def get_series(meta: dict, region_id: str, start: int, end: int, threshold=None)
     if last != end:
         notes.append(f"자료는 {DATA_END_YEAR}년 시즌까지입니다.")
 
+    if meta.get("family", "core") != "core":
+        data = generated_values(var_id, region_id)
+        if data is None:
+            raise SeriesUnavailable(f"{meta['name']}: 이 산지의 값이 없습니다.")
+        years = [y for y in range(first, last + 1) if y in data]
+        missing = (last - first + 1) - len(years)
+        if missing:
+            gaps = [y for y in range(first, last + 1) if y not in data]
+            notes.append(f"계산할 수 없는 {missing}개 연도({', '.join(map(str, gaps[:5]))}{' 등' if len(gaps) > 5 else ''})는 제외했습니다.")
+        return SeriesResult(years, [data[y] for y in years], False, "NASA POWER 일별 원자료로 계산 (자동 생성 지표)", notes)
+
     path = real_series_path(var_id, region_id, thr, default_thr)
     if path is not None:
         data = _read_csv(path)
         years = [y for y in range(first, last + 1) if y in data]
         missing = (last - first + 1) - len(years)
         if missing:
-            notes.append(f"집계 자료에 {missing}개 연도가 비어 있어 제외했습니다.")
-        return SeriesResult(years, [data[y] for y in years], False, f"NASA {meta.get('dataset')} 집계값 ({path.name})", notes)
+            gaps = [y for y in range(first, last + 1) if y not in data]
+            shown = ", ".join(map(str, gaps[:5])) + (" 등" if len(gaps) > 5 else "")
+            notes.append(f"집계 자료에 {missing}개 연도({shown})가 비어 있어 제외했습니다.")
+        return SeriesResult(years, [data[y] for y in years], False, f"NASA {meta.get('dataset')} 팀 집계값 ({path.parent.name}/{path.name})", notes)
 
-    if path is None and (SERIES_DIR / var_id / f"{region_id}.csv").exists() and thr != default_thr:
-        notes.append("이 기준값의 실제 집계가 아직 없어 예시 데이터로 보여 줍니다.")
+    if has_real_data(var_id):
+        # 실제 집계가 있는 지표인데 이 산지·기준값만 없으면 지어내지 않고 알립니다.
+        what = f"기준값 {_thr_name(thr)}{meta.get('threshold_unit') or ''}" if thr != default_thr else "이 산지"
+        raise SeriesUnavailable(f"{meta['name']}: {what}의 실제 집계가 아직 없습니다.")
 
     data = mock_values(var_id, region_id, meta.get("aggregation", "count"), thr, default_thr)
     years = list(range(first, last + 1))

@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from . import catalog
-from .series import get_series
+from .series import SeriesUnavailable, get_series
 from .stats import analyze_series, bh_fdr, pearson
 
 RESOLUTION_NOTE = "결과는 산지 단위(수십 km) 평균이며 밭 하나를 대표하지 않습니다."
@@ -21,8 +21,8 @@ class YearValue(BaseModel):
 class AnalyzeRequest(BaseModel):
     variables: List[str] = Field(..., min_length=1, max_length=3)
     region: str
-    start: int = 2003
-    end: int = 2025
+    start: int = 2001
+    end: int = 2026
     thresholds: Dict[str, float] = Field(default_factory=dict)
     stages: Optional[Dict[str, str]] = None
     user_series: Optional[List[YearValue]] = None
@@ -64,7 +64,10 @@ def _trend_points(years: list, intercept: float, slope: float) -> list:
 
 
 def analyze_one(meta: dict, region_id: str, start: int, end: int, threshold=None) -> dict:
-    s = get_series(meta, region_id, start, end, threshold)
+    try:
+        s = get_series(meta, region_id, start, end, threshold)
+    except SeriesUnavailable as e:
+        raise AnalysisError(str(e)) from e
     if len(s.years) < 5:
         raise AnalysisError(f"{meta['name']}: 분석 가능한 연도가 {len(s.years)}개뿐입니다 (5개 이상 필요).")
     st = analyze_series(s.years, s.values, robust=meta["robust"])
@@ -159,9 +162,31 @@ def run_analysis(req: AnalyzeRequest) -> dict:
         "end": req.end,
         "stages": req.stages or region["stages"],
         "resolution_note": RESOLUTION_NOTE,
+        "validation": catalog.validation(region["id"]),
         "is_mock": any(r["is_mock"] for r in results),
         "results": results,
     }
+
+
+def ground_check(meta: dict, val: Optional[dict]) -> Optional[dict]:
+    """지표가 쓰는 기온과 같은 종류로, 근처 지상 관측소·MODIS 1km 비교 결과를 한 문장으로."""
+    var = meta.get("station_var")
+    if not var or not val or "station" not in val:
+        return None
+    st = val["station"]
+    parts = []
+    if var in ("tmin", "tmean"):
+        parts.append(f"최저기온 평균 오차 {st['tmin_bias']:+.2f}°C(상관 {st['tmin_corr']:.2f})")
+    if var in ("tmax", "tmean"):
+        parts.append(f"최고기온 평균 오차 {st['tmax_bias']:+.2f}°C(상관 {st['tmax_corr']:.2f})")
+    sentence = f"근처 지상 관측소({st['id']})와 비교하면 격자 값은 {', '.join(parts)}입니다."
+    big = max(abs(st["tmin_bias"]) if var in ("tmin", "tmean") else 0, abs(st["tmax_bias"]) if var in ("tmax", "tmean") else 0)
+    if big >= 2:
+        sentence += " 오차가 커서 절대값보다 변화 방향 위주로 보는 것이 좋습니다."
+    modis = val.get("modis")
+    if var == "tmin" and modis:
+        sentence += f" 1km 위성(MODIS)으로 보면 같은 격자 안에서도 밤 지표면 온도가 평균 {modis['pixel_spread_mean']:.1f}°C 차이 납니다."
+    return {"station": st, "modis": modis if var == "tmin" else None, "sentence": sentence}
 
 
 def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None) -> dict:
@@ -179,6 +204,8 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
         if c["region_id"] != region["id"]
     ]
     r4 = lambda x: None if x is None else round(float(x), 4)  # noqa: E731
+    # p값은 아주 작을 때 0.0 으로 뭉개지지 않도록 유효숫자 2자리
+    rp = lambda x: None if x is None else (float(f"{float(x):.2g}") if float(x) < 0.001 else round(float(x), 4))  # noqa: E731
     return {
         "indicator": {
             "id": meta["id"],
@@ -201,6 +228,7 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
         "period": {"start": res["start"], "end": res["end"], "n_years": st["n"]},
         "selected_variables": [r["variable"]["id"] for r in analysis["results"]],
         "data_is_mock": res["is_mock"],
+        "ground_check": ground_check(meta, analysis.get("validation")),
         "resolution_note": analysis["resolution_note"],
         "trend": {
             "method": "Sen 기울기" if st["method"] == "sen" else "OLS 기울기",
@@ -208,9 +236,9 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
             "ci95_per_decade": [r4(st["ci_per_decade"][0]), r4(st["ci_per_decade"][1])],
             "ols_slope_per_decade": r4(st["ols"]["slope_per_decade"]),
             "sen_slope_per_decade": r4(st["sen"]["slope_per_decade"]),
-            "p_ttest": r4(st["ols"]["p"]),
-            "p_mann_kendall": r4(st["mk"]["p"]),
-            "p_ttest_autocorr_adjusted": r4(st["ols"]["p_ar1"]),
+            "p_ttest": rp(st["ols"]["p"]),
+            "p_mann_kendall": rp(st["mk"]["p"]),
+            "p_ttest_autocorr_adjusted": rp(st["ols"]["p_ar1"]),
             "verdict": st["verdict"],
             "detectable": st["detectable"],
         },
@@ -222,12 +250,12 @@ def build_materials(analysis: dict, var_id: str, context: Optional[dict] = None)
         "extremes": [{**e, "value": r4(e["value"]), "anomaly": r4(e["anomaly"])} for e in st["extremes"]],
         "leave_out_most_extreme": {
             **st["leave_out"],
-            "p_t": r4(st["leave_out"]["p_t"]),
-            "p_mk": r4(st["leave_out"]["p_mk"]),
+            "p_t": rp(st["leave_out"]["p_t"]),
+            "p_mk": rp(st["leave_out"]["p_mk"]),
             "slope_per_decade": r4(st["leave_out"]["slope_per_decade"]),
         },
         "flags": st["flags"],
-        "other_regions": [{**o, "slope_per_decade": r4(o["slope_per_decade"]), "p_mk": r4(o["p_mk"]), "q_mk": r4(o["q_mk"])} for o in others],
+        "other_regions": [{**o, "slope_per_decade": r4(o["slope_per_decade"]), "p_mk": rp(o["p_mk"]), "q_mk": rp(o["q_mk"])} for o in others],
         "user_record": (
             {
                 "label": res["overlay"]["label"],

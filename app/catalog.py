@@ -20,9 +20,13 @@ INDICATOR_DIR = DATA_DIR / "indicators"
 
 CATEGORIES = [
     {"id": "temp_frost", "name": "기온·서리"},
-    {"id": "rain_water", "name": "비·물"},
+    {"id": "heat", "name": "더위"},
+    {"id": "rain_water", "name": "비"},
+    {"id": "drought", "name": "가뭄·토양"},
+    {"id": "disease", "name": "병해·습도"},
+    {"id": "sun_wind", "name": "햇빛·바람"},
     {"id": "smoke_air", "name": "연기·대기"},
-    {"id": "growth", "name": "생육"},
+    {"id": "growth", "name": "생육·시기"},
 ]
 
 SECTION_KEYS = {
@@ -33,7 +37,7 @@ SECTION_KEYS = {
     "근거": "references",
 }
 
-DATA_END_YEAR = 2025
+DATA_END_YEAR = 2026
 
 
 def _parse_md(text: str) -> dict:
@@ -55,8 +59,37 @@ def _parse_md(text: str) -> dict:
     return meta
 
 
+GENERATED_FILE = DATA_DIR / "indicators_generated.json"
+
+# 지표 묶음: core 는 사람이 쓴 지표 md, 나머지는 scripts/generate_families.py 가 만든 것
+FAMILIES = [
+    {"id": "core", "name": "핵심 지표"},
+    {"id": "etccdi", "name": "기후 극값 지수 (ETCCDI)"},
+    {"id": "extremes", "name": "평년 대비 극값 일수"},
+    {"id": "stats", "name": "월·계절 기본 통계"},
+]
+
+
 def _dir_signature() -> tuple:
-    return tuple(sorted((p.name, p.stat().st_mtime_ns) for p in INDICATOR_DIR.glob("*.md")))
+    sig = [(p.name, p.stat().st_mtime_ns) for p in INDICATOR_DIR.glob("*.md")]
+    if GENERATED_FILE.exists():
+        sig.append((GENERATED_FILE.name, GENERATED_FILE.stat().st_mtime_ns))
+    return tuple(sorted(sig))
+
+
+def _generated() -> list:
+    if not GENERATED_FILE.exists():
+        return []
+    out = []
+    for m in json.loads(GENERATED_FILE.read_text(encoding="utf-8")):
+        m.setdefault("threshold", None)
+        m.setdefault("threshold_unit", "")
+        m.setdefault("threshold_options", [])
+        m.setdefault("robust", False)
+        m.setdefault("start_year", 2001)
+        m["keywords"] = [k for k in m.get("keywords", []) if k]
+        out.append(m)
+    return out
 
 
 @lru_cache(maxsize=4)
@@ -68,8 +101,28 @@ def _load_indicators(signature: tuple) -> dict:
         meta = _parse_md(path.read_text(encoding="utf-8"))
         if meta.get("id") != path.stem:
             raise ValueError(f"{path.name}: id({meta.get('id')}) 와 파일 이름이 다릅니다")
+        meta["family"] = "core"
         out[meta["id"]] = meta
-    return out
+    for meta in _generated():
+        if meta["id"] in out:
+            raise ValueError(f"자동 생성 지표 id 가 핵심 지표와 겹칩니다: {meta['id']}")
+        out[meta["id"]] = meta
+    # 묶음 → 카테고리 → order → 이름 순 (핵심 지표가 먼저, 같은 카테고리끼리 묶이도록)
+    fam_rank = {f["id"]: i for i, f in enumerate(FAMILIES)}
+    cat_rank = {c["id"]: i for i, c in enumerate(CATEGORIES)}
+    ordered = sorted(
+        out.values(),
+        key=lambda m: (fam_rank.get(m["family"], 99), cat_rank.get(m["category"], 99), int(m.get("order") or 99), m["name"]),
+    )
+    return {m["id"]: m for m in ordered}
+
+
+def has_real_data(var_id: str) -> bool:
+    """실제 값이 있는지: 핵심 지표는 data/series/<변수id>/, 자동 생성 지표는 data/series_generated/."""
+    d = DATA_DIR / "series" / var_id
+    if d.is_dir() and any(d.glob("*.csv")):
+        return True
+    return var_id.startswith(("m_", "s_", "x_", "etccdi_")) and any((DATA_DIR / "series_generated").glob("*.csv"))
 
 
 def indicators() -> dict:
@@ -87,6 +140,17 @@ def _load_regions() -> list:
 
 def regions() -> list:
     return _load_regions()
+
+
+@lru_cache(maxsize=1)
+def _load_validation() -> dict:
+    p = DATA_DIR / "validation.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
+def validation(region_id: str) -> Optional[dict]:
+    """지상 관측소·MODIS 1km 와 비교한 검증 요약 (scripts/import_team_xlsx.py 가 만듦)."""
+    return _load_validation().get(region_id)
 
 
 def region(region_id: str) -> Optional[dict]:
@@ -128,5 +192,9 @@ def public_indicator(meta: dict) -> dict:
         "aggregation": meta.get("aggregation", "count"),
         "robust": meta["robust"],
         "higher_is": meta.get("higher_is", "neutral"),
+        "station_var": meta.get("station_var"),
+        "has_real_data": has_real_data(meta["id"]),
+        "keywords": [str(k) for k in meta["keywords"]],
+        "family": meta.get("family", "core"),
         "sections": meta["sections"],
     }

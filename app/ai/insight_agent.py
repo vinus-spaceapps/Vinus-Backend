@@ -54,13 +54,13 @@ SYSTEM_RULES = """너는 와인 생산자를 돕는 기후 추세 '인사이트 
 
 반드시 지킬 규칙:
 1. 숫자는 [재료]에 있는 값만 쓴다. 직접 계산하거나 새 숫자를 만들지 않는다. 필요한 값이 없으면 "계산되지 않았다"고 쓴다. 숫자는 소수 첫째 자리 정도로 반올림해 써도 된다.
-2. p값은 "추세가 없을 때 이만한 변화가 우연히 나올 확률"로만 설명한다. "추세가 진짜일 확률"이라고 쓰지 않는다.
+2. p값은 "추세가 없을 때 이만한 변화가 우연히 나올 확률"로만 설명한다. "추세가 진짜일 확률"이라고 쓰지 않는다. 0.001보다 작으면 "0.001 미만"으로 쓴다.
 3. 원인을 단정하지 않는다. documents 에 근거가 있을 때만 "~와 관련이 있을 수 있다"고 쓰고 sources 에 그 문서 id 를 넣는다.
 4. 미래를 예측하지 않는다. 관측 기간 안의 비교로만 말한다.
 5. 지시하지 말고 "고려해 볼 점"으로 쓴다. 투자·보험 결정을 대신 내리지 않는다.
 6. verdict.status 가 not_significant 이면 "아직 판단하기 이르다"고 쓰고 detectable 을 설명한다. detectable.status 가 need_more 면 more_years 를, length_enough 면 "기간은 충분한 편이라 실제 변화는 더 작거나 없을 수 있다"를, no_trend 면 "추정할 수 없다"를 쓴다.
 7. flags 에 tests_disagree 가 있으면 t-검정과 Mann-Kendall 결과가 엇갈린다는 것을, one_year_drives_result 가 있으면 leave_out_most_extreme.year 를 빼면 판정이 바뀐다는 것을 confidence 에 반드시 밝힌다. autocorrelation_weakens 가 있으면 자기상관 보정 시 유의성이 약해진다는 것도 밝힌다.
-8. 결과가 산지 단위라 밭 하나를 대표하지 않는다는 점을 confidence 에 한 줄로 밝힌다. data_is_mock 이 true 면 "예시 데이터"라는 점도 밝힌다.
+8. 결과가 산지 단위라 밭 하나를 대표하지 않는다는 점을 confidence 에 한 줄로 밝힌다. data_is_mock 이 true 면 "예시 데이터"라는 점도 밝힌다. ground_check 가 있으면 지상 관측소와의 오차를 confidence 에 한 줄로 밝힌다.
 9. user_context.decision 에 맞춰 meaning 을 쓴다. curious 면 일반적인 의미만 쓴다.
 10. 쉬운 한국어 존댓말. 전문용어는 괄호로 풀어 쓴다. 각 칸은 2~4문장.
 
@@ -156,7 +156,7 @@ def unverified_numbers(texts: List[str], materials: dict) -> List[str]:
     """AI 가 쓴 숫자 중 재료에 없는 숫자. (작은 정수·서식용 숫자는 통과)"""
     allowed: set = set()
     _collect_numbers(materials, allowed)
-    allowed |= {95.0, 0.05, 5.0, 10.0}
+    allowed |= {95.0, 0.05, 5.0, 10.0, 0.001, 0.0001, 0.01}
     bad = []
     for t in texts:
         for raw in NUM_RE.findall(t):
@@ -279,6 +279,8 @@ def fallback_card(m: dict) -> dict:
     if v["status"] != "significant":
         conf.append(detect_sentence(tr["detectable"]) + ".")
     conf.append(m["resolution_note"])
+    if m.get("ground_check"):
+        conf.append(m["ground_check"]["sentence"])
     if m["data_is_mock"]:
         conf.append("지금 화면은 예시 데이터(목업)입니다.")
     confidence = " ".join(conf)
