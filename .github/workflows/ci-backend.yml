@@ -1,0 +1,49 @@
+name: CI Backend
+
+# ⚠️ paths 필터를 걸지 마세요.
+# 이 job 은 룰셋 필수 체크입니다. 실행이 안 되면 "필수 체크 대기 중" 으로 남아 머지가 막힙니다.
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+# 같은 PR 에 커밋을 연달아 푸시하면 이전 실행을 취소합니다.
+concurrency:
+  group: ci-backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # job id 가 곧 룰셋 필수 체크 이름입니다. 바꾸면 룰셋도 같이 바꿔야 합니다.
+  ci-backend:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: '**/requirements*.txt'
+
+      # 코드가 아직 없는 초기 상태에서도 CI 가 통과하도록, 파일이 있을 때만 설치합니다.
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+
+      # 문법 오류·안 쓰는 import 같은 기본 실수만 잡습니다. (스타일 강제는 안 함)
+      - name: Lint
+        run: ruff check --select E9,F63,F7,F82,F401 .
+
+      # 테스트가 하나도 없으면 pytest 가 5 를 반환합니다. 그건 실패로 보지 않습니다.
+      # 통계 엔진은 정훈님 참고 코드와 결과가 같은지 여기서 테스트로 확인합니다.
+      - name: Test
+        run: |
+          set +e
+          pytest -q
+          code=$?
+          if [ $code -eq 5 ]; then echo "테스트 없음, 통과 처리"; exit 0; fi
+          exit $code
