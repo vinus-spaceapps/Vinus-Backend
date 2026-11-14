@@ -125,3 +125,32 @@ tests/               scipy 대조 + 팀 참고 계산 대조(84건) + 기획서 
 | `VINUS_LLM_MODEL` | Claude 모델, 기본 `claude-opus-5-5` |
 | `VINUS_AI_DISABLED=1` | 키가 있어도 AI 끄기 (시연 리허설용) |
 | `VINUS_LLM_NO_SERVER_FALLBACK=1` | 거절 시 서버 측 대체 모델(`fallbacks="default"`) 끄기 |
+
+## 실서버 (Railway)
+
+| 항목 | 값 |
+|---|---|
+| 주소 | https://vinus-backend-production.up.railway.app (API 문서 `/docs`) |
+| Railway | 프로젝트 `vinus`, 서비스 `vinus-backend` |
+| 실행 | `Procfile` (uvicorn, `0.0.0.0`, Railway 가 주는 `PORT`) |
+| Python | `.python-version` = 3.12 (CI 와 같음) |
+
+서비스 설정값(Railway 대시보드 또는 `railway variable`):
+
+| 이름 | 값 |
+|---|---|
+| `OPENAI_API_KEY` | OpenAI 키 (값은 저장소에 두지 않음) |
+| `VINUS_LLM_PROVIDER` | `openai` |
+| `VINUS_OPENAI_MODEL` | `gpt-5.4-mini` |
+| `VINUS_CORS_ORIGINS` | 프론트 주소 (쉼표로 여러 개, 예: `https://vinus-frontend-production.up.railway.app,http://localhost:5173`) |
+
+지금은 GitHub 와 연결하지 않고 로컬 폴더에서 바로 올립니다. push 해도 자동으로 다시 배포되지 않으니, 코드를 바꾸면 이 폴더에서 다시 올리세요.
+
+```bash
+npm install -g @railway/cli   # 처음 한 번
+railway login                 # 처음 한 번
+railway link --project vinus  # 처음 한 번, 서비스는 vinus-backend
+railway up --service vinus-backend
+```
+
+`.env`·`.venv` 는 `.gitignore` 에 있어 올라가지 않습니다.
